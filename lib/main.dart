@@ -20,7 +20,6 @@ const parseServerUrl = "https://parseapi.back4app.com/";
 const clientKey = "9FRMiSnXcxB2MzJSuRt7jS3v75vrOImvh8WnkZIF";
 const masterKey = "7hvm5PaDdxdD0sBqaf2NJCk5q9UnZqu2Xuz018Ur";
 
-// Starting point of the app
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
