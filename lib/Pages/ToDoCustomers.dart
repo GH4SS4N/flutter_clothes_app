@@ -55,41 +55,50 @@ class _ToDoCustmers extends State<ToDoCustomers> {
     // };
   }
 
+  Future<Map<ParseObject, ParseObject>> getAllOrders() async {
+    var orders = await ParseObject("Orders").getAll();
+  }
+
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Container(
-        color: Colors.deepOrangeAccent,
-        child: ListView.builder(
-          itemBuilder: (context, index) => CustomerCard(
-            customerName: 'Ghassan',
-            finished: false,
-            phoneNumber: '0504585475',
-            showCustomerButton: true,
+    return Stack(
+      children: [
+        Container(
+          color: Colors.deepOrangeAccent,
+          child: ListView.builder(
+            itemBuilder: (context, index) => CustomerCard(
+              customerName: 'Ghassan',
+              finished: false,
+              phoneNumber: '0504585475',
+              showCustomerButton: true,
+            ),
+            itemCount: 10,
           ),
-          itemCount: 10,
         ),
-      ),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: FloatingActionButton(
-                  child: Icon(Icons.add),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => addCustmer()));
-                  },
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: FloatingActionButton(
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => addCustmer(),
+                          ));
+                    },
+                  ),
                 ),
-              ),
-            ],
-          )
-        ],
-      )
-    ]);
+              ],
+            )
+          ],
+        )
+      ],
+    );
   }
 }

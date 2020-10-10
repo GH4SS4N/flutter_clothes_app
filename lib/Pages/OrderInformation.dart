@@ -3,6 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Pages/ToDoCustomers.dart';
+import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/Widgets/InfoWidget.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -12,7 +14,9 @@ import 'CustomerPage.dart';
 //import '../InfoWidget.dart';
 
 // order page
-class OrderInfo extends StatelessWidget {
+
+class OrderInfo extends StatefulWidget {
+  bool recipetInWatch = false;
   String customerName;
   String phoneNumber;
   File file;
@@ -22,7 +26,34 @@ class OrderInfo extends StatelessWidget {
   DateTime submitionDate;
   bool finished;
   bool fromCustomerPage;
+
   OrderInfo(
+      {@required this.phoneNumber,
+      @required this.customerName,
+      this.amount,
+      this.dateCreated,
+      this.file,
+      @required this.finished,
+      this.firstPayment,
+      this.submitionDate,
+      this.fromCustomerPage});
+  @override
+  _OrderInfo createState() => _OrderInfo(
+      phoneNumber: phoneNumber, customerName: customerName, finished: finished);
+}
+
+class _OrderInfo extends State<OrderInfo> {
+  bool recipetInWatch = true;
+  String customerName;
+  String phoneNumber;
+  File file;
+  int amount;
+  int firstPayment;
+  DateTime dateCreated;
+  DateTime submitionDate;
+  bool finished;
+  bool fromCustomerPage;
+  _OrderInfo(
       {@required this.phoneNumber,
       @required this.customerName,
       this.amount,
@@ -51,6 +82,15 @@ class OrderInfo extends StatelessWidget {
     //   );
     // }
   }
+  void changeOrderView() {
+    setState(() {
+      if (recipetInWatch) {
+        recipetInWatch = false;
+      } else {
+        recipetInWatch = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,151 +101,165 @@ class OrderInfo extends StatelessWidget {
           backgroundColor: Colors.black,
           title: Text('Order Information'),
         ),
-        body: Container(
-          color: Colors.brown,
-          padding: const EdgeInsets.all(4.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Card(
-                  child: Row(
+        body: SingleChildScrollView(
+          child: Container(
+            //width: 200,
+            color: Colors.brown,
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+            child: Stack(children: [
+              ListView(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.account_circle,
-                            size: 60,
-                          )),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Customer name :   ' + customerName),
-                          Text('   phone number :   ' + phoneNumber)
-                        ],
-                      )
+                      //USER CARD
+
+                      // recipetInWatch
+                      //     ? InfoCard()
+                      //     : ListView.builder(
+                      //         itemCount: 10,
+                      //         itemBuilder: (context, index) => CustomerCard(
+                      //               phoneNumber: phoneNumber,
+                      //               customerName: customerName,
+                      //             )),
                     ],
                   ),
+                ],
+              ),
+
+              // InkWell(
+              //     onTap: changeOrderView,
+              //     child: CutomerProfileCard(
+              //         customerName: customerName, phoneNumber: phoneNumber)),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CutomerProfileCard extends StatelessWidget {
+  String customerName;
+  String phoneNumber;
+
+  CutomerProfileCard({@required this.customerName, @required this.phoneNumber});
+
+  Widget build(BuildContext context) {
+    return Container(
+      height: 90,
+      child: Card(
+        shadowColor: Colors.black,
+        child: Row(
+          children: [
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.account_circle,
+                  size: 60,
+                )),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Customer name :   ' + customerName),
+                Text('   phone number :   ' + phoneNumber)
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InfoCard extends StatelessWidget {
+  bool recipetInWatch = false;
+
+  int amount;
+  int firstPayment;
+  DateTime dateCreated;
+  DateTime submitionDate;
+
+  InfoCard({
+    this.amount,
+    this.dateCreated,
+    this.firstPayment,
+    this.submitionDate,
+  });
+//Saud parse
+//void parseSetsubmitionDate(){};
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(4),
+                  //DEMO OF THE IMAGE VIOW
+                  child: Container(
+                    child: Icon(Icons.image),
+                    height: 360,
+                    width: 380,
+                    color: Colors.grey,
+                  ),
                 ),
-                // Info(
-                //   typeOfInfo: "Customer Name",
-                //   info: customerName,
-                // ),
-                // Info(
-                //   typeOfInfo: "phone number",
-                //   info: '$phoneNumber',
-                // ),
-                Card(
-                  margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
+                //DETAILED INFORMATION ABOUT THE ORDER
+                Info(
+                  typeOfInfo: "Amount ",
+                  info: '$amount',
+                ),
+                Info(
+                  typeOfInfo: "first payment ",
+                  info: '$firstPayment',
+                ),
+                Info(
+                  typeOfInfo: "amount left ",
+                  info: '{$amount}',
+                ),
+                Info(
+                  typeOfInfo: "date created ",
+                  info: '$dateCreated',
+                ),
+                Info(
+                  typeOfInfo: "submetion date ",
+                  info: 'xxxxxxxxxx',
+                ),
+                submitionDate == null
+                    ? Card(
+                        color: Colors.red,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(4),
-                              child: Container(
-                                child: Icon(Icons.image),
-                                height: 360,
-                                width: 380,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Info(
-                              typeOfInfo: "Amount ",
-                              info: '$amount',
-                            ),
-                            Info(
-                              typeOfInfo: "first payment ",
-                              info: '$firstPayment',
-                            ),
-                            Info(
-                              typeOfInfo: "amount left ",
-                              info: '{$amount}',
-                            ),
-                            Info(
-                              typeOfInfo: "date created ",
-                              info: '$dateCreated',
-                            ),
-                            Info(
-                              typeOfInfo: "submetion date ",
-                              info: 'xxxxxxxxxx',
-                            ),
+                              padding: EdgeInsets.all(30),
+                              child: Text('Finished???'),
+                            )
                           ],
                         ),
                       )
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("State :"),
-                    this.finished
-                        ? Container(
-                            //decoration: ShapeDecoration(shape: ShapeBorder.lerp(, b, t),
-                            width: 30,
-                            height: 30,
-                            color: Colors.green,
-                            child: Icon(Icons.assignment_turned_in))
-                        : Container(
-                            //decoration: ShapeDecoration(shape: ShapeBorder.lerp(, b, t),
-                            width: 30,
-                            height: 30,
-                            color: Colors.amber,
-                            child: Icon(Icons.access_alarm)),
-                  ],
-                ),
-                Card(
-                  color: Colors.red,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(30),
-                        child: Text('Finished???'),
+                    : Card(
+                        color: Colors.green,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(30),
+                              child: Text(submitionDate.toIso8601String()),
+                            )
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                )
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     fromCustomerPage
-                //         ? RaisedButton(
-                //             onPressed: () {
-                //               Navigator.push(
-                //                   context,
-                //                   MaterialPageRoute(
-                //                       builder: (context) => CustomerPage(
-                //                             customerName: customerName,
-                //                             finished: finished,
-                //                             phoneNumber: phoneNumber,
-                //                           )));
-                //             },
-                //             child: Text('Custmer'),
-                //             color: Colors.green,
-                //           )
-                //         : Text(''),
-                //     finished
-                //         ? Text('') //  RaisedButton(
-                //         //     onPressed: null,
-                //         //     child: Text('Finished??'),
-                //         //     color: Colors.red,
-                //         //   )
-                //         : RaisedButton(
-                //             onPressed: () {},
-                //             child: Text('Finished??'),
-                //             color: Colors.red,
-                //           ),
-                //   ],
-                // )
               ],
             ),
-          ),
-        ),
+          )
+        ],
       ),
     );
   }

@@ -19,21 +19,14 @@ class CustomerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.black,
-          title: Text('Customer Orders'),
-        ),
-        body: Container(
-          color: Colors.indigoAccent,
-          child: ListView.builder(
-              itemBuilder: (context, index) => CustomerCard(
-                    phoneNumber: phoneNumber,
-                    customerName: customerName,
-                    finished: finished,
-                    showCustomerButton: false,
-                  )),
-        ));
+    return Container(
+      child: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) => CustomerCard(
+                phoneNumber: phoneNumber,
+                customerName: customerName,
+                finished: finished,
+              )),
+    );
   }
 }

@@ -45,7 +45,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> studentNames = ["Not yet baby", "Wallah not yet"];
   var dietPlan;
-
+  Widget current = ToDoCustomers();
   @override
   void initState() {
     super.initState();
@@ -61,18 +61,25 @@ class _MyHomePageState extends State<MyHomePage> {
         .catchError((error) => print("error"));
   }
 
-  void onConnection(value) {
-    getStudentNames();
+  Future onConnection(value) async {
+    var apiResponse = await ParseObject("Orders").getAll();
+
+    var orders = apiResponse.results;
+    print('CUSTOMER ID!');
+    print(orders[0]['customerId']
+        .getQuery()
+        .query()
+        .then((value) => print(value.results[0])));
   }
 
-  void writeStudentNames() async {
+  /*void writeStudentNames() async {
     dietPlan = ParseObject('DietPlan')
       ..set('Name', 'Ketogenic')
       ..set('Fat1', 65);
     await dietPlan.save();
-  }
+  }*/
 
-  void getStudentNames() async {
+  /*void getStudentNames() async {
     var students = await ParseObject("DietPlan").getAll();
     var newStudentNames = [];
 
@@ -88,14 +95,82 @@ class _MyHomePageState extends State<MyHomePage> {
         print("Failed ya 3ammy");
       }
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-        length: 2,
-        child: Scaffold(
+          length: 2,
+          child: Scaffold(
+            drawer: Drawer(
+              child: Container(
+                // padding: EdgeInsets.all(10),
+                color: Colors.black,
+                child: ListView(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        setState(() {
+                          current = SearchCustmer();
+                        });
+
+                        Navigator.pop(context);
+                      },
+                      focusColor: Colors.amber,
+                      contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      leading: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        'Search',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    // Divider(
+                    //   color: Colors.black,
+                    // ),
+
+                    ListTile(
+                      onTap: () {
+                        setState(() {
+                          current = ToDoCustomers();
+                        });
+
+                        Navigator.pop(context);
+                      },
+                      focusColor: Colors.amber,
+                      contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      leading: Icon(Icons.home, color: Colors.white),
+                      title: Text(
+                        'Home',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ListTile(
+                      focusColor: Colors.amber,
+                      contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      leading: Icon(Icons.subdirectory_arrow_right,
+                          color: Colors.white),
+                      title: Text(
+                        'Sign up a user',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    ListTile(
+                      focusColor: Colors.amber,
+                      contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      leading: Icon(Icons.do_not_disturb_on, color: Colors.red),
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             appBar: AppBar(
               flexibleSpace: Row(
                 children: [Icon(Icons.access_alarm)],
@@ -105,23 +180,11 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text("Hamdan's"),
               centerTitle: true,
               backgroundColor: Colors.black,
-              bottom: TabBar(tabs: [
-                Tab(
-                  icon: Icon(Icons.access_alarm),
-                  //text: 'to do',
-                ),
-                Tab(
-                  icon: Icon(Icons.search),
-                )
-              ]),
             ),
-            body: TabBarView(children: [
-              ToDoCustomers(),
-              SearchCustmer(),
-            ])
-            // This trailing comma makes auto-formatting nicer for build methods.
-            ),
-      ),
+            body: current,
+          )
+          // This trailing comma makes auto-formatting nicer for build methods.
+          ),
     );
   }
 }
