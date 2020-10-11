@@ -101,41 +101,43 @@ class _OrderInfo extends State<OrderInfo> {
           backgroundColor: Colors.black,
           title: Text('Order Information'),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            //width: 200,
-            color: Colors.brown,
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-            child: Stack(children: [
-              ListView(
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //USER CARD
+        body: Container(
+          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
+          // child: Container(
+          //   //width: 200,
+          //   color: Colors.brown,
+          //   padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+          // child: Stack(children: [
+          child: Column(children: [
+            InkWell(
+                onTap: changeOrderView,
+                child: CutomerProfileCard(
+                    customerName: customerName, phoneNumber: phoneNumber)),
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
+            // Column(
+            //   mainAxisSize: MainAxisSize.min,
+            //   children: [
+            //USER CARD
 
-                      // recipetInWatch
-                      //     ? InfoCard()
-                      //     : ListView.builder(
-                      //         itemCount: 10,
-                      //         itemBuilder: (context, index) => CustomerCard(
-                      //               phoneNumber: phoneNumber,
-                      //               customerName: customerName,
-                      //             )),
-                    ],
+            recipetInWatch
+                ? InfoCard()
+                : Container(
+                    color: Colors.amber,
+                    child: ListView.builder(
+                        itemCount: 10,
+                        itemBuilder: (context, index) => CustomerCard(
+                              phoneNumber: phoneNumber,
+                              customerName: customerName,
+                            )),
                   ),
-                ],
-              ),
-
-              // InkWell(
-              //     onTap: changeOrderView,
-              //     child: CutomerProfileCard(
-              //         customerName: customerName, phoneNumber: phoneNumber)),
-            ]),
-          ),
+            //   ],
+            // ),
+            // ),
+          ]),
         ),
       ),
+      // ),
     );
   }
 }
@@ -148,13 +150,13 @@ class CutomerProfileCard extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      height: 90,
+      height: 100,
       child: Card(
         shadowColor: Colors.black,
         child: Row(
           children: [
             Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(1.0),
                 child: Icon(
                   Icons.account_circle,
                   size: 60,
