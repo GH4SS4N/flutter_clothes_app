@@ -43,6 +43,7 @@ class OrderInfo extends StatefulWidget {
 }
 
 class _OrderInfo extends State<OrderInfo> {
+  var itemBuilder = 2;
   bool recipetInWatch = true;
   String customerName;
   String phoneNumber;
@@ -102,43 +103,30 @@ class _OrderInfo extends State<OrderInfo> {
           title: Text('Order Information'),
         ),
         body: Container(
-          padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
-          // child: Container(
-          //   //width: 200,
-          //   color: Colors.brown,
-          //   padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-          // child: Stack(children: [
+          color: Colors.brown,
           child: Column(children: [
             InkWell(
                 onTap: changeOrderView,
                 child: CutomerProfileCard(
                     customerName: customerName, phoneNumber: phoneNumber)),
-            // Padding(
-            //   padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
-            // Column(
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: [
-            //USER CARD
-
-            recipetInWatch
-                ? InfoCard()
-                : Container(
-                    color: Colors.amber,
-                    child: ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (context, index) => CustomerCard(
-                              phoneNumber: phoneNumber,
-                              customerName: customerName,
-                            )),
-                  ),
-            //   ],
-            // ),
-            // ),
+            Expanded(
+              child: recipetInWatch
+                  ? SingleChildScrollView(child: InfoCard())
+                  : ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: 2,
+                      itemBuilder: (context, index) => CustomerCard(
+                        phoneNumber: phoneNumber,
+                        customerName: customerName,
+                        finished: true,
+                      ),
+                    ),
+            )
           ]),
         ),
       ),
-      // ),
     );
+    // ),
   }
 }
 
@@ -150,6 +138,7 @@ class CutomerProfileCard extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.black,
       height: 100,
       child: Card(
         shadowColor: Colors.black,
