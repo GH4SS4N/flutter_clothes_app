@@ -1,14 +1,7 @@
-import 'dart:io';
-//import 'dart:ui';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-//import '../AddCustomers.dart';
-//import '../CustomerCard.dart';
-import '../main.dart';
 import 'AddCustomers.dart';
 
 class ToDoCustomers extends StatefulWidget {
@@ -18,45 +11,37 @@ class ToDoCustomers extends StatefulWidget {
 
 // not finished order page
 class _ToDoCustmers extends State<ToDoCustomers> {
+  List orders = List();
+
   @override
   void initState() {
     super.initState();
-    print('in');
-    //getOrders();
-    print('out');
-    // writeStudentNames();
-    //getStudentNames();
+    fetchOrders();
   }
 
-  void getOrders() async {
-    var queryBuilder = QueryBuilder<ParseObject>(ParseObject("Orders"))
-      ..whereNotEqualTo("submitted_att", null);
+  void fetchOrders() async {
+    // fetch all orders
+    ParseResponse response = await ParseObject("Orders").getAll();
 
-    var response = await queryBuilder.query();
-    setState(() {
-      if (response.success) {
-        print(response.result);
-      } else {
-        print('failed');
-      }
+    // for every order
+    response.results.forEach((element) async {
+      // fetch the related customer
+      ParseResponse response = await element['customerId'].getQuery().query();
+      // get the customer from the response
+      var customer = response.result[0];
+
+      // Create this order data
+      var order = {
+        'finished': element['finished'],
+        'customerName': customer['name'],
+        'phoneNumber': customer['phoneNumber']
+      };
+
+      // Add it to the orders list
+      setState(() {
+        orders = orders + [order];
+      });
     });
-
-    // setState(() {
-    //   if (students.success) {
-    //     for (var student in students.result) {
-    //       print(student['Name']);
-    //       newStudentNames.add(student["Name"]);
-    //     }
-
-    //     studentNames = newStudentNames;
-    //   } else {
-    //     print("Failed ya 3ammy");
-    //   }
-    // };
-  }
-
-  Future<Map<ParseObject, ParseObject>> getAllOrders() async {
-    var orders = await ParseObject("Orders").getAll();
   }
 
   Widget build(BuildContext context) {
@@ -66,12 +51,12 @@ class _ToDoCustmers extends State<ToDoCustomers> {
           color: Colors.deepOrangeAccent,
           child: ListView.builder(
             itemBuilder: (context, index) => CustomerCard(
-              customerName: 'Ghassan',
-              finished: false,
-              phoneNumber: '0504585475',
+              customerName: orders[index]['customerName'],
+              finished: orders[index]['finished'],
+              phoneNumber: orders[index]['phoneNumber'],
               showCustomerButton: true,
             ),
-            itemCount: 10,
+            itemCount: orders.length,
           ),
         ),
         Column(
