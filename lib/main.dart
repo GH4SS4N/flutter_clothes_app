@@ -17,11 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Custmers',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        // visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      title: 'Customers',
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: MyHomePage(),
     );
   }
@@ -33,10 +30,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-// clientKey: "9FRMiSnXcxB2MzJSuRt7jS3v75vrOImvh8WnkZIF"
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> studentNames = ["Not yet baby", "Wallah not yet"];
-  var dietPlan;
   Widget current = ToDoCustomers();
   bool connected = false;
 
@@ -77,7 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Scaffold(
           drawer: Drawer(
             child: Container(
-              // padding: EdgeInsets.all(10),
               color: Colors.black,
               child: ListView(
                 children: [
@@ -100,10 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  // Divider(
-                  //   color: Colors.black,
-                  // ),
-
                   ListTile(
                     onTap: () {
                       setState(() {
