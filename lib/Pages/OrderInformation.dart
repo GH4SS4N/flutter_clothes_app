@@ -8,8 +8,6 @@ import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/Widgets/InfoWidget.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-import 'CustomerPage.dart';
-
 //import '../CustomerPage.dart';
 //import '../InfoWidget.dart';
 
@@ -17,13 +15,13 @@ import 'CustomerPage.dart';
 
 class OrderInfo extends StatefulWidget {
   bool recipetInWatch = false;
-  String customerName;
-  String phoneNumber;
+  String customerName = "null";
+  String phoneNumber = "null";
   File file;
-  int amount;
-  int firstPayment;
-  DateTime dateCreated;
-  DateTime submitionDate;
+  String amount = "*";
+  String firstPayment = "*";
+  String dateCreated = "2020-10-04T19:34:09.194Z";
+  String submitionDate = "no";
   bool finished;
   bool fromCustomerPage;
 
@@ -35,23 +33,29 @@ class OrderInfo extends StatefulWidget {
       this.file,
       @required this.finished,
       this.firstPayment,
-      this.submitionDate,
+      @required this.submitionDate,
       this.fromCustomerPage});
   @override
   _OrderInfo createState() => _OrderInfo(
-      phoneNumber: phoneNumber, customerName: customerName, finished: finished);
+      phoneNumber: phoneNumber,
+      customerName: customerName,
+      finished: finished,
+      amount: amount,
+      dateCreated: dateCreated,
+      firstPayment: firstPayment,
+      submitionDate: submitionDate);
 }
 
 class _OrderInfo extends State<OrderInfo> {
   var itemBuilder = 2;
   bool recipetInWatch = true;
-  String customerName;
-  String phoneNumber;
+  String customerName = "null";
+  String phoneNumber = "null";
   File file;
-  int amount;
-  int firstPayment;
-  DateTime dateCreated;
-  DateTime submitionDate;
+  String amount = "null";
+  String firstPayment = "null";
+  String dateCreated = "null";
+  String submitionDate = 'null';
   bool finished;
   bool fromCustomerPage;
   _OrderInfo(
@@ -62,7 +66,7 @@ class _OrderInfo extends State<OrderInfo> {
       this.file,
       @required this.finished,
       this.firstPayment,
-      this.submitionDate,
+      @required this.submitionDate,
       this.fromCustomerPage});
 
   void showImage() async {
@@ -108,19 +112,64 @@ class _OrderInfo extends State<OrderInfo> {
             InkWell(
                 onTap: changeOrderView,
                 child: CutomerProfileCard(
-                    customerName: customerName, phoneNumber: phoneNumber)),
+                  customerName: customerName,
+                  phoneNumber: phoneNumber,
+                  recipetInWatch: recipetInWatch,
+                )),
             Expanded(
               child: recipetInWatch
-                  ? SingleChildScrollView(child: InfoCard())
+                  ? SingleChildScrollView(
+                      child: InfoCard(
+                      amount: amount,
+                      dateCreated: dateCreated,
+                      firstPayment: firstPayment,
+                      submitionDate: submitionDate,
+                    ))
                   : ListView.builder(
                       scrollDirection: Axis.vertical,
-                      itemCount: 2,
-                      itemBuilder: (context, index) => CustomerCard(
-                        phoneNumber: phoneNumber,
-                        customerName: customerName,
-                        finished: true,
-                      ),
-                    ),
+                      itemCount: 10,
+                      itemBuilder: (context, index) => InkWell(
+                            onTap: () {
+                              //index information transat to the recipet then go back to the recipet view
+                              // dateCreated = order[index]["dateCreated"];
+                              // firstPayment = order[index]["firstPayment"];
+                              // submitionDate = order[index]["submitionDate"];
+                              changeOrderView();
+                            },
+                            child: Card(
+                              margin: EdgeInsets.fromLTRB(10, 8, 10, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text('amount :  ' + amount),
+                                        Text('date created :' + dateCreated),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                            icon: Icon(submitionDate == null
+                                                ? Icons.assignment_turned_in
+                                                : Icons.access_alarm),
+                                            onPressed: () {}),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
             )
           ]),
         ),
@@ -133,8 +182,12 @@ class _OrderInfo extends State<OrderInfo> {
 class CutomerProfileCard extends StatelessWidget {
   String customerName;
   String phoneNumber;
+  bool recipetInWatch;
 
-  CutomerProfileCard({@required this.customerName, @required this.phoneNumber});
+  CutomerProfileCard(
+      {@required this.customerName,
+      @required this.phoneNumber,
+      @required this.recipetInWatch});
 
   Widget build(BuildContext context) {
     return Container(
@@ -143,19 +196,42 @@ class CutomerProfileCard extends StatelessWidget {
       child: Card(
         shadowColor: Colors.black,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Icon(
-                  Icons.account_circle,
-                  size: 60,
-                )),
+            Container(
+                child: Row(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: Icon(
+                      Icons.account_circle,
+                      size: 60,
+                    )),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Customer name :   ' + customerName),
+                    Text('  phone number :   ' + phoneNumber)
+                  ],
+                ),
+              ],
+            )),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Customer name :   ' + customerName),
-                Text('   phone number :   ' + phoneNumber)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(children: [
+                    Icon(Icons.image,
+                        size: 25,
+                        color: recipetInWatch ? Colors.black : Colors.grey),
+                    Icon(Icons.format_align_center,
+                        size: 25,
+                        color: recipetInWatch ? Colors.grey : Colors.black),
+                  ]),
+                )
               ],
             )
           ],
@@ -168,10 +244,10 @@ class CutomerProfileCard extends StatelessWidget {
 class InfoCard extends StatelessWidget {
   bool recipetInWatch = false;
 
-  int amount;
-  int firstPayment;
-  DateTime dateCreated;
-  DateTime submitionDate;
+  String amount = "null";
+  String firstPayment = "null";
+  String dateCreated = "null";
+  String submitionDate = "non";
 
   InfoCard({
     this.amount,
@@ -204,7 +280,7 @@ class InfoCard extends StatelessWidget {
                 //DETAILED INFORMATION ABOUT THE ORDER
                 Info(
                   typeOfInfo: "Amount ",
-                  info: '$amount',
+                  info: amount,
                 ),
                 Info(
                   typeOfInfo: "first payment ",
@@ -212,39 +288,44 @@ class InfoCard extends StatelessWidget {
                 ),
                 Info(
                   typeOfInfo: "amount left ",
-                  info: '{$amount}',
+                  info: amount,
                 ),
                 Info(
                   typeOfInfo: "date created ",
                   info: '$dateCreated',
                 ),
-                Info(
-                  typeOfInfo: "submetion date ",
-                  info: 'xxxxxxxxxx',
-                ),
+
                 submitionDate == null
-                    ? Card(
-                        color: Colors.red,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(30),
-                              child: Text('Finished???'),
-                            )
-                          ],
+                    ? InkWell(
+                        onTap: () {},
+                        child: Card(
+                          color: Colors.red,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(30),
+                                child: Text('Finished???'),
+                              )
+                            ],
+                          ),
                         ),
                       )
-                    : Card(
-                        color: Colors.green,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(30),
-                              child: Text(submitionDate.toIso8601String()),
-                            )
-                          ],
+                    : InkWell(
+                        onTap: () {
+                          print('fuck Saud');
+                        },
+                        child: Card(
+                          color: Colors.green,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(30),
+                                child: Text(submitionDate),
+                              )
+                            ],
+                          ),
                         ),
                       )
               ],

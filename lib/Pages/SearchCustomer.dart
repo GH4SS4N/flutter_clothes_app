@@ -65,6 +65,7 @@ class SearchCustmer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderInfo(
+                              submitionDate: "",
                               phoneNumber: '45',
                               customerName: "r3d",
                               finished: true),

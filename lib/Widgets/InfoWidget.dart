@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 //information wedget
 class Info extends StatelessWidget {
-  String typeOfInfo = '';
-  String info = '*';
+  String typeOfInfo = "null";
+  String info = "null";
   Info({@required this.typeOfInfo, this.info});
 
   @override
@@ -18,17 +18,7 @@ class Info extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(typeOfInfo + " :"),
-            info == '**'
-                ? Container(
-                    //color: Colors.amber,
-                    height: 25,
-                    child: IconButton(
-                        icon: Icon(Icons.picture_as_pdf), onPressed: () {}),
-                  )
-                : Text(info)
-          ],
+          children: [Text(typeOfInfo + " :"), Text(info)],
         ),
         Divider(
           color: Colors.black,

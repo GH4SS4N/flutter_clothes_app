@@ -154,7 +154,11 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.black,
           ),
           // TODO: replace the loading text with visualization
-          body: connected ? current : Text('Loading'),
+          body: connected
+              ? current
+              : Center(
+                  child: Icon(Icons.loop),
+                ),
         ),
       ),
     );

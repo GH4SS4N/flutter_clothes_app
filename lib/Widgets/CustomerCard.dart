@@ -11,15 +11,23 @@ import '../Pages/OrderInformation.dart';
 class CustomerCard extends StatelessWidget {
   //ParseObject order;
 
-  String customerName;
-  String phoneNumber;
+  String customerName = "null";
+  String phoneNumber = "null";
   bool finished = false;
   bool showCustomerButton = true;
+  String amount = "null";
+  String dateCreated = "null";
+  String firstPayment = "null";
+  String submitionDate = "no";
   CustomerCard(
       {@required this.phoneNumber,
       @required this.customerName,
       this.finished,
-      this.showCustomerButton});
+      this.showCustomerButton,
+      this.amount,
+      this.dateCreated,
+      this.firstPayment,
+      @required this.submitionDate});
 
   //CustomerCard({@required this.order})
 
@@ -31,10 +39,14 @@ class CustomerCard extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => OrderInfo(
+              amount: amount,
+              dateCreated: dateCreated,
+              firstPayment: firstPayment,
               phoneNumber: this.phoneNumber,
               customerName: this.customerName,
               finished: this.finished,
-              fromCustomerPage: showCustomerButton,
+              //fromCustomerPage: showCustomerButton,
+              submitionDate: submitionDate,
             ),
           ),
         );
