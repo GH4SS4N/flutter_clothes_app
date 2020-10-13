@@ -13,7 +13,7 @@ class ToDoCustomers extends StatefulWidget {
 // not finished order page
 class _ToDoCustmers extends State<ToDoCustomers> {
   List orders = List();
-  List customers = List();
+  Map<String, Object> customers = {};
 
   @override
   void initState() {
@@ -25,17 +25,18 @@ class _ToDoCustmers extends State<ToDoCustomers> {
     // fetch all orders
     ParseResponse response = await ParseObject("Orders").getAll();
 
-    // for every order
     response.results.forEach((order) async {
-      // fetch the related customer
-      ParseResponse response = await order['customerId'].getQuery().query();
-      // get the customer from the response
-      var customer = response.result[0];
+      String customerId = order['customer']['objectId'];
 
-      // Add it to the orders list
+      // if this customer has not been loaded already
+      if (!customers.containsKey(customerId))
+        // download it and save it
+        customers.addAll({
+          customerId:
+              (await ParseObject('Customer').getObject(customerId)).result
+        });
       setState(() {
-        orders = orders + [order];
-        customers = customers + [customer];
+        orders += [order];
       });
     });
   }
@@ -48,7 +49,7 @@ class _ToDoCustmers extends State<ToDoCustomers> {
           child: ListView.builder(
             itemBuilder: (context, index) {
               var order = orders[index];
-              var customer = customers[index];
+              var customer = customers[order['customer']['objectId']];
 
               return OrderCard(
                 order: order,

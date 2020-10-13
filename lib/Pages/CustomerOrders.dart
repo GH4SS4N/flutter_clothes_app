@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/Widgets/InfoWidget.dart';
 import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
+import 'package:flutter_clothes_app/Widgets/OrderDetails.dart';
 
 class CustomerOrders extends StatefulWidget {
   final order;
@@ -96,14 +97,14 @@ class _CustomerOrders extends State<CustomerOrders> {
                   });
                 },
                 child: CustomerCard(
-                    name: "customerName", phoneNumber: "phoneNumber")),
+                    name: customer['name'], phoneNumber: customer['phoneNumber'])),
             Expanded(
               child:
                   // If there is an order to view
                   order != null
                       ?
                       // Show the order
-                      SingleChildScrollView(child: InfoCard(order))
+                      SingleChildScrollView(child: OrderDetails(order: order))
                       // else, show the list of all orders
                       : ordersList(),
             )
@@ -112,92 +113,5 @@ class _CustomerOrders extends State<CustomerOrders> {
       ),
     );
     // ),
-  }
-}
-
-class InfoCard extends StatelessWidget {
-  bool recipetInWatch = false;
-
-  int amount;
-  int firstPayment;
-  DateTime dateCreated;
-  DateTime submitionDate;
-
-  final order;
-
-  InfoCard({this.order});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.fromLTRB(4, 4, 4, 4),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(4),
-                  //DEMO OF THE IMAGE VIEW
-                  child: Container(
-                    child: Icon(Icons.image),
-                    height: 360,
-                    width: 380,
-                    color: Colors.grey,
-                  ),
-                ),
-                //DETAILED INFORMATION ABOUT THE ORDER
-                Info(
-                  typeOfInfo: "Amount ",
-                  info: '$amount',
-                ),
-                Info(
-                  typeOfInfo: "first payment ",
-                  info: '$firstPayment',
-                ),
-                Info(
-                  typeOfInfo: "amount left ",
-                  info: '{$amount}',
-                ),
-                Info(
-                  typeOfInfo: "date created ",
-                  info: '$dateCreated',
-                ),
-                Info(
-                  typeOfInfo: "submetion date ",
-                  info: 'xxxxxxxxxx',
-                ),
-                submitionDate == null
-                    ? Card(
-                        color: Colors.red,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(30),
-                              child: Text('Finished???'),
-                            )
-                          ],
-                        ),
-                      )
-                    : Card(
-                        color: Colors.green,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(30),
-                              child: Text(submitionDate.toIso8601String()),
-                            )
-                          ],
-                        ),
-                      )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
