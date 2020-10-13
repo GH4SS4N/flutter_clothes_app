@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
+import 'package:flutter_clothes_app/Pages/CustomerOrders.dart';
+import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'AddCustomers.dart';
@@ -12,6 +13,7 @@ class ToDoCustomers extends StatefulWidget {
 // not finished order page
 class _ToDoCustmers extends State<ToDoCustomers> {
   List orders = List();
+  List customers = List();
 
   @override
   void initState() {
@@ -24,22 +26,16 @@ class _ToDoCustmers extends State<ToDoCustomers> {
     ParseResponse response = await ParseObject("Orders").getAll();
 
     // for every order
-    response.results.forEach((element) async {
+    response.results.forEach((order) async {
       // fetch the related customer
-      ParseResponse response = await element['customerId'].getQuery().query();
+      ParseResponse response = await order['customerId'].getQuery().query();
       // get the customer from the response
       var customer = response.result[0];
-
-      // Create this order data
-      var order = {
-        'finished': element['finished'],
-        'customerName': customer['name'],
-        'phoneNumber': customer['phoneNumber']
-      };
 
       // Add it to the orders list
       setState(() {
         orders = orders + [order];
+        customers = customers + [customer];
       });
     });
   }
@@ -50,15 +46,26 @@ class _ToDoCustmers extends State<ToDoCustomers> {
         Container(
           color: Colors.deepOrangeAccent,
           child: ListView.builder(
-            itemBuilder: (context, index) => CustomerCard(
-              customerName: orders[index]['customerName'],
-              finished: orders[index]['finished'],
-              phoneNumber: orders[index]['phoneNumber'],
-              amount: "amount",
-              dateCreated: orders[index]['createdAt'].toString(),
-              firstPayment: "first payment",
-              submitionDate: 'Click Me Please',
-            ),
+            itemBuilder: (context, index) {
+              var order = orders[index];
+              var customer = customers[index];
+
+              return OrderCard(
+                order: order,
+                customer: customer,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CustomerOrders(
+                        customer: customer,
+                        order: order,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
             itemCount: orders.length,
           ),
         ),
