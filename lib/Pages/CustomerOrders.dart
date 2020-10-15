@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Customer.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
-import 'package:flutter_clothes_app/Widgets/InfoWidget.dart';
 import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
 import 'package:flutter_clothes_app/Widgets/OrderDetails.dart';
 
 class CustomerOrders extends StatefulWidget {
-  final order;
-  final customer;
+  final Order order;
+  final Customer customer;
 
-  CustomerOrders({this.order, @required this.customer, Key key})
-      : super(key: key);
+  CustomerOrders(this.customer, {this.order, Key key}) : super(key: key);
 
   @override
   _CustomerOrders createState() =>
@@ -17,9 +17,9 @@ class CustomerOrders extends StatefulWidget {
 }
 
 class _CustomerOrders extends State<CustomerOrders> {
-  var order;
-  var customer;
-  var orders;
+  Order order;
+  Customer customer;
+  List<Order> orders;
 
   _CustomerOrders({
     @required this.order,
@@ -47,7 +47,7 @@ class _CustomerOrders extends State<CustomerOrders> {
 
   void fetchAllOrders() {
     setState(() {
-      orders = [];
+      orders = List<Order>();
     });
   }
 
@@ -91,13 +91,13 @@ class _CustomerOrders extends State<CustomerOrders> {
           color: Colors.brown,
           child: Column(children: [
             InkWell(
-                onTap: () {
-                  setState(() {
-                    order = null;
-                  });
-                },
-                child: CustomerCard(
-                    name: customer['name'], phoneNumber: customer['phoneNumber'])),
+              onTap: () {
+                setState(() {
+                  order = null;
+                });
+              },
+              child: CustomerCard(customer),
+            ),
             Expanded(
               child:
                   // If there is an order to view

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Customer.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
 
 class OrderCard extends StatelessWidget {
-  final order;
-  final customer;
-  final onTap;
+  final Order order;
+  final Customer customer;
+  final Function onTap;
 
   // If customer is passed, we will show customer info
   // otherwise don't show it
@@ -21,7 +23,7 @@ class OrderCard extends StatelessWidget {
             //TODO: Implement conditional rendering of a customer's info
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text('Order id: ' + order['objectId']),
+              child: Text('Order id: ' + order.objectId),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),

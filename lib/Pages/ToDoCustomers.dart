@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Customer.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Pages/CustomerOrders.dart';
 import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
@@ -12,8 +14,8 @@ class ToDoCustomers extends StatefulWidget {
 
 // not finished order page
 class _ToDoCustmers extends State<ToDoCustomers> {
-  List orders = List();
-  Map<String, Object> customers = {};
+  List<Order> orders = List<Order>(); 
+  Set<Customer> customers = Set<Customer>();
 
   @override
   void initState() {
@@ -21,24 +23,26 @@ class _ToDoCustmers extends State<ToDoCustomers> {
     fetchOrders();
   }
 
-  void fetchOrders() async {
-    // fetch all orders
-    ParseResponse response = await ParseObject("Orders").getAll();
+  void fetchOrders() {
+    Order()
+      .getAll()
+      .then((response) {
+        response.results.forEach((order) async {
+          Order o = order;
+          Customer c = customers.lookup(o.customer);
 
-    response.results.forEach((order) async {
-      String customerId = order['customer']['objectId'];
+          if (!customers. .contains(o.customer)) {
+            c = (await Customer().getObject(o.customer.objectId)).results[0];
+          }
 
-      // if this customer has not been loaded already
-      if (!customers.containsKey(customerId))
-        // download it and save it
-        customers.addAll({
-          customerId:
-              (await ParseObject('Customer').getObject(customerId)).result
+          setState(() => {
+            orders += [o],
+            customers = customers.union(c)
+          });
         });
-      setState(() {
-        orders += [order];
       });
-    });
+
+    setState(() => orders = response.results.cast<Order>())
   }
 
   Widget build(BuildContext context) {
@@ -48,8 +52,8 @@ class _ToDoCustmers extends State<ToDoCustomers> {
           color: Colors.deepOrangeAccent,
           child: ListView.builder(
             itemBuilder: (context, index) {
-              var order = orders[index];
-              var customer = customers[order['customer']['objectId']];
+              Order order = orders[index];
+              Customer customer = orders[index].customer;
 
               return OrderCard(
                 order: order,
@@ -59,7 +63,7 @@ class _ToDoCustmers extends State<ToDoCustomers> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CustomerOrders(
-                        customer: customer,
+                        customer,
                         order: order,
                       ),
                     ),

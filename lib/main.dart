@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Customer.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'Pages/SearchCustomer.dart';
@@ -43,7 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
         // run code after connection
         .then(onConnection)
         // TODO: notify the user of the error
-        .catchError((error) => print('Could not connect to Parse.\n' + error));
+        .catchError((error) =>
+            print('Could not connect to Parse.\n' + error.toString()));
   }
 
   // Establishes a DEBUG connection with Parse server
@@ -53,7 +56,11 @@ class _MyHomePageState extends State<MyHomePage> {
       parseServerUrl,
       clientKey: clientKey,
       masterKey: masterKey,
-      debug: true,
+      // Register our custom classes
+      registeredSubClassMap: <String, ParseObjectConstructor>{
+        Order.keyTableName: () => Order(),
+        Customer.keyTableName: () => Customer(),
+      },
     );
   }
 

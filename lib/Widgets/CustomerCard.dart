@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Customer.dart';
 
 class CustomerCard extends StatelessWidget {
-  final String name;
-  final String phoneNumber;
+  final Customer customer;
 
-  CustomerCard({@required this.name, @required this.phoneNumber});
+  CustomerCard(this.customer);
 
   Widget build(BuildContext context) {
     return Container(
@@ -24,8 +24,8 @@ class CustomerCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Customer name :   ' + name),
-                Text('Phone number :   ' + phoneNumber)
+                Text('Customer name :   ' + customer.name),
+                Text('Phone number :   ' + customer.phoneNumber)
               ],
             )
           ],
