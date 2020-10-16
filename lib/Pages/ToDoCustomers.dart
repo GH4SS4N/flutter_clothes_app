@@ -14,8 +14,8 @@ class ToDoCustomers extends StatefulWidget {
 
 // not finished order page
 class _ToDoCustmers extends State<ToDoCustomers> {
-  List<Order> orders = List<Order>(); 
-  Set<Customer> customers = Set<Customer>();
+  List<Order> orders = List<Order>();
+  //Set<Customer> customers = Set<Customer>();
 
   @override
   void initState() {
@@ -23,26 +23,52 @@ class _ToDoCustmers extends State<ToDoCustomers> {
     fetchOrders();
   }
 
+  // Updates the state with all orders and their customers
   void fetchOrders() {
-    Order()
-      .getAll()
-      .then((response) {
-        response.results.forEach((order) async {
-          Order o = order;
-          Customer c = customers.lookup(o.customer);
+    // objectIds for customers we are currently fetching
+    //Set<String> customerIdsToFetch = Set();
 
-          if (!customers. .contains(o.customer)) {
-            c = (await Customer().getObject(o.customer.objectId)).results[0];
-          }
-
-          setState(() => {
-            orders += [o],
-            customers = customers.union(c)
-          });
+    QueryBuilder<Order>(Order())
+      ..includeObject([Order.customerKey])
+      ..query().then((response) {
+        setState(() {
+          orders = response.results.cast<Order>();
         });
       });
 
-    setState(() => orders = response.results.cast<Order>())
+    /*
+    Order()
+        // Fetch everything from Order
+        .getAll()
+        // wait for response
+        .then((response) {
+          
+          QueryBuilder(Customer()).
+          Customer()
+          // go through every result
+          response.results.forEach((order) async {
+            // get the order
+            Order o = order;
+            String customerId = o.customer.objectId;
+
+            // looks up this order's customer in saved customers
+            Customer c = customers.lookup(o.customer);
+
+            // if no customer was found
+            if (c == null && !customerIdsToFetch.contains(customerId)) {
+              // register fetching the customer
+              customerIdsToFetch.add(customerId);
+              // fetch the customer
+              c = (await Customer().getObject(customerId)).results[0];
+            }
+
+            // save the new order and its customer
+            setState(() => {
+              orders += [o],
+              customers.add(c),
+            });
+          });
+        });*/
   }
 
   Widget build(BuildContext context) {
@@ -53,7 +79,8 @@ class _ToDoCustmers extends State<ToDoCustomers> {
           child: ListView.builder(
             itemBuilder: (context, index) {
               Order order = orders[index];
-              Customer customer = orders[index].customer;
+              Customer customer = order.customer;
+              print("printing customer" + order.customer.toString());
 
               return OrderCard(
                 order: order,

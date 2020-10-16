@@ -61,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Order.keyTableName: () => Order(),
         Customer.keyTableName: () => Customer(),
       },
+      debug: true,
     );
   }
 

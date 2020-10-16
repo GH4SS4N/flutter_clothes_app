@@ -1,7 +1,7 @@
 import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-class Customer extends ParseObject implements Comparable {
+class Customer extends ParseObject {
   static const String keyTableName = 'Customer';
   Customer() : super(keyTableName);
 
@@ -30,7 +30,10 @@ class Customer extends ParseObject implements Comparable {
   }
 
   @override
-  int compareTo(other) {
-    return objectId.compareTo(other.objectId);
+  bool operator ==(other) {
+    return objectId == other.objectId;
   }
+
+  @override
+  int get hashCode => objectId.hashCode;
 }
