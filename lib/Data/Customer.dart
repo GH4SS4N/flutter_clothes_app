@@ -28,12 +28,4 @@ class Customer extends ParseObject {
 
     return response.results as List<Order>;
   }
-
-  @override
-  bool operator ==(other) {
-    return objectId == other.objectId;
-  }
-
-  @override
-  int get hashCode => objectId.hashCode;
 }

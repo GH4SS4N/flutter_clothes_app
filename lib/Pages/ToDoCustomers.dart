@@ -15,7 +15,6 @@ class ToDoCustomers extends StatefulWidget {
 // not finished order page
 class _ToDoCustmers extends State<ToDoCustomers> {
   List<Order> orders = List<Order>();
-  //Set<Customer> customers = Set<Customer>();
 
   @override
   void initState() {
@@ -25,9 +24,8 @@ class _ToDoCustmers extends State<ToDoCustomers> {
 
   // Updates the state with all orders and their customers
   void fetchOrders() {
-    // objectIds for customers we are currently fetching
-    //Set<String> customerIdsToFetch = Set();
-
+    /*TODO: make this more performant by getting all orders first
+      then querying customers based on an array of csutomer ids obtained from orders*/
     QueryBuilder<Order>(Order())
       ..includeObject([Order.customerKey])
       ..query().then((response) {
@@ -35,40 +33,6 @@ class _ToDoCustmers extends State<ToDoCustomers> {
           orders = response.results.cast<Order>();
         });
       });
-
-    /*
-    Order()
-        // Fetch everything from Order
-        .getAll()
-        // wait for response
-        .then((response) {
-          
-          QueryBuilder(Customer()).
-          Customer()
-          // go through every result
-          response.results.forEach((order) async {
-            // get the order
-            Order o = order;
-            String customerId = o.customer.objectId;
-
-            // looks up this order's customer in saved customers
-            Customer c = customers.lookup(o.customer);
-
-            // if no customer was found
-            if (c == null && !customerIdsToFetch.contains(customerId)) {
-              // register fetching the customer
-              customerIdsToFetch.add(customerId);
-              // fetch the customer
-              c = (await Customer().getObject(customerId)).results[0];
-            }
-
-            // save the new order and its customer
-            setState(() => {
-              orders += [o],
-              customers.add(c),
-            });
-          });
-        });*/
   }
 
   Widget build(BuildContext context) {
@@ -80,7 +44,6 @@ class _ToDoCustmers extends State<ToDoCustomers> {
             itemBuilder: (context, index) {
               Order order = orders[index];
               Customer customer = order.customer;
-              print("printing customer" + order.customer.toString());
 
               return OrderCard(
                 order: order,
@@ -103,7 +66,6 @@ class _ToDoCustmers extends State<ToDoCustomers> {
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
