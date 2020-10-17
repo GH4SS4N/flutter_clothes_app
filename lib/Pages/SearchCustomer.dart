@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Pages/OrderInformation.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
+import 'package:flutter_clothes_app/Widgets/OrderDetails.dart';
 
 //import '../CustomerCard.dart';
 
@@ -64,11 +65,7 @@ class SearchCustmer extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => OrderInfo(
-                              submitionDate: "",
-                              phoneNumber: '45',
-                              customerName: "r3d",
-                              finished: true),
+                          builder: (context) => OrderDetails(Order(), () {}),
                         ));
                   }),
             )
