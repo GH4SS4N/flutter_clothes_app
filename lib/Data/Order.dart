@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter_clothes_app/Data/Customer.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -10,11 +12,11 @@ class Order extends ParseObject {
   Order.clone() : this();
 
   static const String finishedKey = 'finished';
-  String get finished => get<String>(finishedKey);
-  set finished(String finished) => set<String>(finishedKey, finished);
+  bool get finished => get<bool>(finishedKey);
+  set finished(bool finished) => set<bool>(finishedKey, finished);
 
   static const String amountKey = 'amount';
-  double get amount => get<double>(amountKey);
+  double get amount => double.parse(get<dynamic>(amountKey).toString());
   set amount(double amount) => set<double>(amountKey, amount);
 
   static const String imageKey = 'image';
@@ -26,7 +28,8 @@ class Order extends ParseObject {
   set createdBy(ParseUser createdBy) => set<ParseUser>(createdByKey, createdBy);
 
   static const String firstPaymentKey = 'firstPayment';
-  double get firstPayment => get<double>(firstPaymentKey);
+  double get firstPayment =>
+      double.parse(get<dynamic>(firstPaymentKey).toString());
   set firstPayment(double firstPayment) =>
       set<double>(firstPaymentKey, firstPayment);
 
@@ -38,4 +41,14 @@ class Order extends ParseObject {
   static const String customerKey = 'customer';
   Customer get customer => get<Customer>(customerKey);
   set customer(Customer customer) => set<Customer>(customerKey, customer);
+
+  static QueryBuilder<Order> sortedOrdersBuilder() {
+    return QueryBuilder<Order>(Order())
+      // include their customer objects
+      ..includeObject([Order.customerKey])
+      // order by finished status, from unfinished (0) to finished (1)
+      ..orderByAscending(Order.finishedKey)
+      // then order by the date created at from most recent to older
+      ..orderByDescending('createdAt');
+  }
 }

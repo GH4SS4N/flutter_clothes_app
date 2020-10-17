@@ -4,7 +4,7 @@ import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'Pages/SearchCustomer.dart';
-import 'Pages/ToDoCustomers.dart';
+import 'Pages/OrdersHome.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget current = ToDoCustomers();
+  Widget current = OrdersHome();
   bool connected = false;
 
   @override
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ListTile(
                     onTap: () {
                       setState(() {
-                        current = ToDoCustomers();
+                        current = OrdersHome();
                       });
 
                       Navigator.pop(context);
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
             centerTitle: true,
             backgroundColor: Colors.black,
           ),
-          // TODO: replace the loading text with visualization
+          // TODO: replace the loading icon with visualization
           body: connected
               ? current
               : Center(

@@ -1,6 +1,7 @@
 import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
+// Custom class for Customer
 class Customer extends ParseObject {
   static const String keyTableName = 'Customer';
   Customer() : super(keyTableName);
@@ -18,6 +19,7 @@ class Customer extends ParseObject {
   set phoneNumber(String phoneNumber) =>
       set<String>(phoneNumberKey, phoneNumber);
 
+  // fetches all orders ordered by this customer
   Future<List<Order>> getOrders() async {
     if (objectId == null) return null;
 

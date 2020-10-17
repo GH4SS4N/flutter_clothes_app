@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/Widgets/OrderDetails.dart';
 
@@ -64,7 +65,7 @@ class SearchCustmer extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => OrderDetails(order: {}),
+                          builder: (context) => OrderDetails(Order(), () {}),
                         ));
                   }),
             )

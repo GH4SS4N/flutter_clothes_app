@@ -1,9 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Data/Order.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 
-class OrderDetails extends StatelessWidget {
-  final order;
+class OrderDetails extends StatefulWidget {
+  final Order order;
+  final Function orderUpdated;
 
-  OrderDetails({this.order});
+  OrderDetails(this.order, this.orderUpdated);
+
+  @override
+  _OrderDetailsState createState() => _OrderDetailsState();
+}
+
+class _OrderDetailsState extends State<OrderDetails> {
+  bool _loading = false;
+
+  Widget buildImage(ParseFile image) {
+    // if no image was found return an icon
+    if (image == null) return Icon(Icons.do_not_disturb);
+
+    // otherwise build a future
+    return FutureBuilder<ParseFile>(
+      // download the image
+      future: image.download(),
+      // build the image
+      builder: (BuildContext context, AsyncSnapshot<ParseFileBase> snapshot) {
+        // if data was downloaded
+        return snapshot.hasData
+            ?
+            // show the image
+            Image.file((snapshot.data as ParseFile).file)
+            // otherwise show a circular progress indicator
+            : Center(
+                child: CircularProgressIndicator(),
+                heightFactor: 0.50,
+                widthFactor: 0.50,
+              );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,63 +52,90 @@ class OrderDetails extends StatelessWidget {
               children: [
                 Padding(
                   padding: EdgeInsets.all(4),
-                  //DEMO OF THE IMAGE VIEW
+                  // Order image
                   child: Container(
-                    child: Icon(Icons.image),
+                    // TODO: implement clicking on the image to expand it
+                    child: buildImage(widget.order.image),
                     height: 360,
                     width: 380,
                     color: Colors.grey,
                   ),
                 ),
-                //DETAILED INFORMATION ABOUT THE ORDER
+                Divider(color: Colors.black),
                 OrderDetail(
-                  typeOfInfo: "Amount ",
-                  //info: '$amount',
-                  info: 'to implement',
+                  "Amount ",
+                  widget.order.amount.toString() + " SAR",
                 ),
                 OrderDetail(
-                  typeOfInfo: "first payment ",
-                  info: 'to implement',
+                  "First payment ",
+                  widget.order.firstPayment.toString() + " SAR",
                 ),
                 OrderDetail(
-                  typeOfInfo: "amount left ",
-                  info: 'to implement',
+                  "Amount left ",
+                  (widget.order.amount - widget.order.firstPayment).toString() +
+                      " SAR",
                 ),
                 OrderDetail(
-                  typeOfInfo: "date created ",
-                  info: 'to implement',
+                  "Date created ",
+                  widget.order.createdAt.toIso8601String(),
                 ),
-                OrderDetail(
-                  typeOfInfo: "Submition date ",
-                  info: 'to implement',
-                ),
-                //TODO: check if submission date == null
-                null == null
+                // if the order is updating
+                // if the order is completed
+                widget.order.finished
+                    // show completion date
                     ? Card(
-                        color: Colors.red,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(30),
-                              child: Text('Submit'),
-                            )
-                          ],
-                        ),
-                      )
-                    : Card(
                         color: Colors.green,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                                 padding: EdgeInsets.all(30),
-                                child: Text('SUBMISSION DATE')
-                                //child: Text(submitionDate.toIso8601String()),
-                                )
+                                child:
+                                    Text(widget.order.completedDate.toString()))
                           ],
                         ),
                       )
+                    // otherwise show button to complete the order
+                    : InkWell(
+                        child: Card(
+                          color: Colors.red,
+                          child: _loading
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                  heightFactor: 0.50,
+                                  widthFactor: 0.50,
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(30),
+                                      child: Text('Complete'),
+                                    )
+                                  ],
+                                ),
+                        ),
+                        // when tapped
+                        onTap: () {
+                          // update the order
+                          widget.order.finished = true;
+                          widget.order.completedDate = DateTime.now();
+                          // save the new vlues on the server
+                          widget.order.save().then((response) {
+                            // TODO: implement handling update error
+                            if (!response.success)
+                              print('Could not update object');
+
+                            // stop loading
+                            if (this.mounted) setState(() => _loading = false);
+
+                            // notify parent
+                            widget.orderUpdated();
+                          });
+                          // start loading
+                          setState(() => _loading = true);
+                        },
+                      ),
               ],
             ),
           )
@@ -84,24 +146,23 @@ class OrderDetails extends StatelessWidget {
 }
 
 class OrderDetail extends StatelessWidget {
-  final String typeOfInfo;
-  final String info;
+  final String detailKey;
+  final detail;
 
-  OrderDetail({@required this.typeOfInfo, this.info});
+  OrderDetail(this.detailKey, this.detail);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text(typeOfInfo + " :"), Text(info)],
-        ),
-        Divider(
-          color: Colors.black,
-        )
-      ],
-    ));
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text(detailKey + ":"), Text(detail.toString())],
+          ),
+          Divider(color: Colors.black),
+        ],
+      ),
+    );
   }
 }

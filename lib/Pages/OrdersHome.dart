@@ -7,13 +7,13 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'AddCustomers.dart';
 
-class ToDoCustomers extends StatefulWidget {
+// This page shows all orders
+class OrdersHome extends StatefulWidget {
   @override
-  _ToDoCustmers createState() => _ToDoCustmers();
+  _OrdersHome createState() => _OrdersHome();
 }
 
-// not finished order page
-class _ToDoCustmers extends State<ToDoCustomers> {
+class _OrdersHome extends State<OrdersHome> {
   List<Order> orders = List<Order>();
 
   @override
@@ -22,14 +22,16 @@ class _ToDoCustmers extends State<ToDoCustomers> {
     fetchOrders();
   }
 
-  // Updates the state with all orders and their customers
+  // Fetch and update the state with orders
   void fetchOrders() {
     /*TODO: make this more performant by getting all orders first
-      then querying customers based on an array of csutomer ids obtained from orders*/
-    QueryBuilder<Order>(Order())
-      ..includeObject([Order.customerKey])
+      then querying customers based on an array of customer ids obtained from orders*/
+    // fetch orders
+    Order.sortedOrdersBuilder()
+      // submit query and receive response
       ..query().then((response) {
         setState(() {
+          // cast the response list to type of Order
           orders = response.results.cast<Order>();
         });
       });
@@ -44,21 +46,21 @@ class _ToDoCustmers extends State<ToDoCustomers> {
             itemBuilder: (context, index) {
               Order order = orders[index];
               Customer customer = order.customer;
-
               return OrderCard(
-                order: order,
-                customer: customer,
-                onTap: () {
+                order,
+                () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CustomerOrders(
                         customer,
                         order: order,
+                        orderUpdated: fetchOrders,
                       ),
                     ),
                   );
                 },
+                customer: customer,
               );
             },
             itemCount: orders.length,

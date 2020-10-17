@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Data/Customer.dart';
 import 'package:flutter_clothes_app/Data/Order.dart';
 
+// Overview information of an order representing an order record
 class OrderCard extends StatelessWidget {
+  // order object
   final Order order;
+  // customer object
   final Customer customer;
+  // function to run when tapped
   final Function onTap;
 
-  // If customer is passed, we will show customer info
-  // otherwise don't show it
-  OrderCard({@required this.order, this.customer, this.onTap});
+  OrderCard(this.order, this.onTap, {this.customer});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,8 @@ class OrderCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //TODO: Implement conditional rendering of a customer's info
+            /*TODO: Implement conditional rendering of a customer's info
+              based on whether or not customer is null */
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text('Order id: ' + order.objectId),
