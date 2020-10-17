@@ -3,7 +3,6 @@ import 'package:flutter_clothes_app/Data/Customer.dart';
 import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Pages/CustomerOrders.dart';
 import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 import 'AddCustomers.dart';
 
