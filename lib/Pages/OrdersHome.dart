@@ -4,7 +4,7 @@ import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Pages/CustomerOrders.dart';
 import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
 
-import 'AddCustomers.dart';
+import 'AddOrder.dart';
 
 // This page shows all orders
 class OrdersHome extends StatefulWidget {
@@ -79,7 +79,7 @@ class _OrdersHome extends State<OrdersHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => addCustmer(),
+                            builder: (context) => AddOrder(),
                           ));
                     },
                   ),
