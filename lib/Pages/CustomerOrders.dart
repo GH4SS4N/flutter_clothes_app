@@ -41,7 +41,7 @@ class _CustomerOrders extends State<CustomerOrders> {
       // Get the orders
       fetchCustomerOrders();
       // TODO: return something else instead of only text
-      return Text('Loading orders');
+      return Center(child: Container(child: CircularProgressIndicator()));
     }
 
     // build a list of order cards

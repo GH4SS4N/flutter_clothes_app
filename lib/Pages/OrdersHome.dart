@@ -14,7 +14,7 @@ class OrdersHome extends StatefulWidget {
 
 class _OrdersHome extends State<OrdersHome> {
   List<Order> orders = List<Order>();
-
+  bool waiting = true;
   @override
   void initState() {
     super.initState();
@@ -30,6 +30,7 @@ class _OrdersHome extends State<OrdersHome> {
       // submit query and receive response
       ..query().then((response) {
         setState(() {
+          waiting = false;
           // cast the response list to type of Order
           orders = response.results.cast<Order>();
         });
@@ -40,30 +41,34 @@ class _OrdersHome extends State<OrdersHome> {
     return Stack(
       children: [
         Container(
+          width: double.infinity,
+          height: double.infinity,
           color: Colors.deepOrangeAccent,
-          child: ListView.builder(
-            itemBuilder: (context, index) {
-              Order order = orders[index];
-              Customer customer = order.customer;
-              return OrderCard(
-                order,
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CustomerOrders(
-                        customer,
-                        order: order,
-                        orderUpdated: fetchOrders,
-                      ),
-                    ),
-                  );
-                },
-                customer: customer,
-              );
-            },
-            itemCount: orders.length,
-          ),
+          child: waiting
+              ? Center(child: Container(child: CircularProgressIndicator()))
+              : ListView.builder(
+                  itemBuilder: (context, index) {
+                    Order order = orders[index];
+                    Customer customer = order.customer;
+                    return OrderCard(
+                      order,
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CustomerOrders(
+                              customer,
+                              order: order,
+                              orderUpdated: fetchOrders,
+                            ),
+                          ),
+                        );
+                      },
+                      customer: customer,
+                    );
+                  },
+                  itemCount: orders.length,
+                ),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,

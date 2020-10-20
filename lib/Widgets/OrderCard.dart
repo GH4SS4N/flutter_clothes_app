@@ -25,15 +25,17 @@ class OrderCard extends StatelessWidget {
             /*TODO: Implement conditional rendering of a customer's info
               based on whether or not customer is null */
             Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Name: ' + customer.get("name")),
-                    Text('Number: ' + customer.get("phoneNumber"))
-                  ],
-                ) //Text('Order id: ' + order.objectId),
-                ),
+              padding: const EdgeInsets.all(20.0),
+              child:
+                  //Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Text('Name: ' + customer.get("name")),
+                  //     Text('Number: ' + customer.get("phoneNumber"))
+                  //   ],
+                  // )
+                  Text('Order id: ' + order.objectId),
+            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(

@@ -12,12 +12,25 @@ class _AddCustomer extends State<AddCustomer> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.black,
         title: Text('Add Customer'),
       ),
       body: Container(
           child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'this is a new customer >>> what his name ?',
+                  style: TextStyle(fontSize: 20),
+                )
+              ],
+            ),
+          ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
             child: Expanded(
@@ -29,9 +42,22 @@ class _AddCustomer extends State<AddCustomer> {
               ),
             ),
           ),
-          RaisedButton(
-            onPressed: () {},
-            child: Text('Add Customer'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RaisedButton(
+                color: Colors.green,
+                onPressed: () {
+                  //TODO: HERE SHOULD BE THE PARSE CALL TO WRITE THE NEW CUTOMER
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.add),
+                    Text('Add Customer'),
+                  ],
+                ),
+              ),
+            ],
           )
         ],
       )),
