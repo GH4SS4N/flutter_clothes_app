@@ -1,13 +1,11 @@
 import 'dart:io';
-//import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/main.dart';
 
 import 'AddCustomer.dart';
 
-//page where we add orders
+// Add orders
 class AddOrder extends StatefulWidget {
   @override
   _AddOrder createState() => _AddOrder();
