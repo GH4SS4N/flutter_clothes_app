@@ -40,7 +40,7 @@ class _CustomerOrders extends State<CustomerOrders> {
     if (customerOrders == null) {
       // Get the orders
       fetchCustomerOrders();
-      // TODO: return something else instead of only text
+
       return Center(child: Container(child: CircularProgressIndicator()));
     }
 

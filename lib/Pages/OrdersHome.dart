@@ -23,7 +23,7 @@ class _OrdersHome extends State<OrdersHome> {
 
   // Fetch and update the state with orders
   void fetchOrders() {
-    /*TODO: make this more performant by getting all orders first
+    /*TODO: make this more performant by getting all orders first(Saud)
       then querying customers based on an array of customer ids obtained from orders*/
     // fetch orders
     Order.sortedOrdersBuilder()

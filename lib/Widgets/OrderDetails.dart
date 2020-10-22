@@ -54,7 +54,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   padding: EdgeInsets.all(4),
                   // Order image
                   child: Container(
-                    // TODO: implement clicking on the image to expand it
+                    // TODO: implement clicking on the image to expand it(Ghassan)
                     child: buildImage(widget.order.image),
                     height: 360,
                     width: 380,
@@ -122,7 +122,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                           widget.order.completedDate = DateTime.now();
                           // save the new vlues on the server
                           widget.order.save().then((response) {
-                            // TODO: implement handling update error
+                            // TODO: implement handling update error(Saud:is it a widget??Ghassan is asking)
                             if (!response.success)
                               print('Could not update object');
 
