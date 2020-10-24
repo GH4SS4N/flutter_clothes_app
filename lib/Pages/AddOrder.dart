@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'AddCustomer.dart';
+import 'package:flutter/services.dart';
+//import 'AddCustomer.dart';
 
 //page where we add orders
 class AddOrder extends StatefulWidget {
@@ -10,6 +11,10 @@ class AddOrder extends StatefulWidget {
 }
 
 class _AddOrder extends State<AddOrder> {
+  var phoneNumber;
+  var firstPayment;
+  var amount;
+  var cutomerName;
   bool customerDoesExect = false;
   final formKey = new GlobalKey<FormState>();
   File file;
@@ -22,16 +27,50 @@ class _AddOrder extends State<AddOrder> {
     );
     if (result != null) {
       //TODO: use file to uploud it to parse (Saud)
-      File file = File(result.files.single.path);
+      file = File(result.files.single.path);
     }
+  }
+
+  Future<String> createCustomerDialog(BuildContext context) {
+    TextEditingController textController = new TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('New Customer'),
+            content: TextField(
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]+|\s'))
+              ],
+              decoration: InputDecoration(labelText: 'Cutomer Name'),
+              controller: textController,
+            ),
+            actions: [
+              MaterialButton(
+                  elevation: 20,
+                  child: Text('Add'),
+                  onPressed: () {
+                    Navigator.of(context).pop(textController.text.toString());
+                  })
+            ],
+          );
+        });
   }
 
   validatAndSave() {
     if (formKey.currentState.validate()) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => AddCustomer()));
-      //TODO: parse call to chick if the customer excest or not and assign the order(Saud)
-      print("successes");
+      formKey.currentState.save();
+      print(amount.toString() +
+          ' ' +
+          firstPayment.toString() +
+          ' ' +
+          phoneNumber.toString());
+      //excuted if there is no customer with this phone number
+      createCustomerDialog(context).then((value) {
+        cutomerName = value;
+      });
+      // //TODO: parse call to chick if the customer excest or not and assign the order(Saud)
+      // print("successes");
     }
   }
 
@@ -62,6 +101,14 @@ class _AddOrder extends State<AddOrder> {
                     maxLengthEnforced: true,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: 'Phone Number :'),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                    ],
+                    onSaved: (val) {
+                      setState(() {
+                        phoneNumber = val;
+                      });
+                    },
                     validator: (val) {
                       return val.length == 0
                           ? 'enter a phone number'
@@ -80,6 +127,14 @@ class _AddOrder extends State<AddOrder> {
                     // maxLengthEnforced: true,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: 'price :'),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                    ],
+                    onSaved: (value) {
+                      setState(() {
+                        amount = value;
+                      });
+                    },
                     validator: (value) {
                       return value.length == 0 ? "fill in the price " : null;
                     },
@@ -93,6 +148,14 @@ class _AddOrder extends State<AddOrder> {
                     // maxLengthEnforced: true,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(labelText: 'first payment :'),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                    ],
+                    onSaved: (valu) {
+                      setState(() {
+                        firstPayment = valu;
+                      });
+                    },
                     validator: (valu) {
                       return valu.length == 0
                           ? "there has to be first payment"
@@ -111,12 +174,6 @@ class _AddOrder extends State<AddOrder> {
                         onPressed: () {
                           imagegetFile();
                         }),
-                    // Text('or'),
-                    // IconButton(
-                    //     icon: Icon(Icons.picture_as_pdf),
-                    //     onPressed: () {
-                    //       pdfgetFile();
-                    //     }),
                   ],
                 ),
                 Row(
@@ -125,16 +182,17 @@ class _AddOrder extends State<AddOrder> {
                     Padding(
                         padding: const EdgeInsets.fromLTRB(0, 100, 20, 0),
                         child: RaisedButton(
-                          color: Colors.green,
-                          //padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              Icon(Icons.add),
-                              Text('Add Order'),
-                            ],
-                          ),
-                          onPressed: validatAndSave,
-                        )),
+                            color: Colors.green,
+                            //padding: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                Icon(Icons.add),
+                                Text('Add Order'),
+                              ],
+                            ),
+                            onPressed: () {
+                              validatAndSave();
+                            })),
                   ],
                 ),
               ],
