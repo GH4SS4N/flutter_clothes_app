@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Customer.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
-import 'package:flutter_clothes_app/Pages/CustomerOrders.dart';
-import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
+import 'package:flutter_clothes_app/Model/Customer.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:flutter_clothes_app/View/Pages/CustomerOrders.dart';
+import 'package:flutter_clothes_app/View/Widgets/OrderCard.dart';
 
 import 'AddOrder.dart';
 
@@ -14,27 +14,24 @@ class OrdersHome extends StatefulWidget {
 
 class _OrdersHome extends State<OrdersHome> {
   List<Order> orders = List<Order>();
-  bool waiting = true;
+  bool loading = true;
+
   @override
   void initState() {
     super.initState();
     fetchOrders();
   }
 
-  // Fetch and update the state with orders
   void fetchOrders() {
     /*TODO: make this more performant by getting all orders first(Saud)
       then querying customers based on an array of customer ids obtained from orders*/
-    // fetch orders
-    Order.sortedOrdersBuilder()
-      // submit query and receive response
-      ..query().then((response) {
-        setState(() {
-          waiting = false;
-          // cast the response list to type of Order
-          orders = response.results.cast<Order>();
-        });
+    Order.getAllSorted().then((response) {
+      setState(() {
+        loading = false;
+        // cast the response list to type of Order
+        orders = response.results.cast<Order>();
       });
+    });
   }
 
   Widget build(BuildContext context) {
@@ -44,7 +41,7 @@ class _OrdersHome extends State<OrdersHome> {
           width: double.infinity,
           height: double.infinity,
           color: Colors.deepOrangeAccent,
-          child: waiting
+          child: loading
               ? Center(child: Container(child: CircularProgressIndicator()))
               : ListView.builder(
                   itemBuilder: (context, index) {
@@ -59,7 +56,7 @@ class _OrdersHome extends State<OrdersHome> {
                             builder: (context) => CustomerOrders(
                               customer,
                               order: order,
-                              orderUpdated: fetchOrders,
+                              orderUpdated: () => setState(() {}),
                             ),
                           ),
                         );

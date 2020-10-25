@@ -1,13 +1,11 @@
 //import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
 
-import 'package:flutter_clothes_app/Widgets/OrderDetails.dart';
+import 'package:flutter_clothes_app/View/Widgets/OrderDetails.dart';
 
-//import '../CustomerCard.dart';
-
-//finished customer page
+// Search for customers
 class SearchCustmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(

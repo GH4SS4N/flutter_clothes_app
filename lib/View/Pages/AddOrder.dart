@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'AddCustomer.dart';
 
-//page where we add orders
+// Add orders
 class AddOrder extends StatefulWidget {
   @override
   _AddOrder createState() => _AddOrder();

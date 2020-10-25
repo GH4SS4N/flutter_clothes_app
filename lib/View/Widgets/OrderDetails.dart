@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class OrderDetails extends StatefulWidget {
