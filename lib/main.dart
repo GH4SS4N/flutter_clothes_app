@@ -1,14 +1,11 @@
+import 'package:flutter/material.dart';
 
- 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
-
-import 'Data/Customer.dart';
 import 'Data/ParseConnection.dart';
 import 'Pages/SearchCustomer.dart';
 import 'Pages/OrdersHome.dart';
 
 void main() {
-  //TODO:make the login page and the checker(Ghassan)
+  //TODO: @GH4SS4N make the login page and the checker
   runApp(MyApp());
 }
 
