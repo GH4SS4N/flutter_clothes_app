@@ -1,4 +1,4 @@
-import 'package:flutter_clothes_app/Data/Customer.dart';
+import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class Order extends ParseObject {

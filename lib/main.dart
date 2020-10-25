@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'Data/ParseConnection.dart';
-import 'Pages/SearchCustomer.dart';
-import 'Pages/OrdersHome.dart';
+import 'Model/ParseConnection.dart';
+import 'View/Pages/SearchCustomer.dart';
+import 'View/Pages/OrdersHome.dart';
 
 void main() {
   //TODO: @GH4SS4N make the login page and the checker
@@ -128,7 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
               centerTitle: true,
               backgroundColor: Colors.black,
             ),
-            body: current),
+            body: connected
+                ? current
+                : Center(child: CircularProgressIndicator())),
       ),
     );
   }

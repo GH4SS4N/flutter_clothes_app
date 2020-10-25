@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Customer.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
+import 'package:flutter_clothes_app/Model/Customer.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
 
 // Overview information of an order representing an order record
 class OrderCard extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Customer.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
-import 'package:flutter_clothes_app/Pages/CustomerOrders.dart';
-import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
+import 'package:flutter_clothes_app/Model/Customer.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:flutter_clothes_app/View/Pages/CustomerOrders.dart';
+import 'package:flutter_clothes_app/View/Widgets/OrderCard.dart';
 
 import 'AddOrder.dart';
 
