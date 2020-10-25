@@ -40,7 +40,7 @@ class Order extends ParseObject {
   Customer get customer => get<Customer>(customerKey);
   set customer(Customer customer) => set<Customer>(customerKey, customer);
 
-  static QueryBuilder<Order> sortedOrdersBuilder() {
+  static QueryBuilder<Order> queryBuilderSorted() {
     return QueryBuilder<Order>(Order())
       // include their customer objects
       ..includeObject([Order.customerKey])
@@ -48,5 +48,9 @@ class Order extends ParseObject {
       ..orderByAscending(Order.finishedKey)
       // then order by the date created at from most recent to older
       ..orderByDescending('createdAt');
+  }
+
+  static Future<ParseResponse> getAllSorted() async {
+    return queryBuilderSorted().query();
   }
 }

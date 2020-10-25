@@ -19,15 +19,32 @@ class Customer extends ParseObject {
   set phoneNumber(String phoneNumber) =>
       set<String>(phoneNumberKey, phoneNumber);
 
-  // fetches all orders ordered by this customer
-  Future<List<Order>> getOrders() async {
-    if (objectId == null) return null;
-
-    QueryBuilder<Order> queryBuilder = QueryBuilder<Order>(Order())
-      ..whereMatchesQuery(Order.customerKey, QueryBuilder<Customer>(this));
+  // Look up a customer with their phone number
+  // returns null if no customer was found
+  static Future<Customer> lookup(String phoneNumber) async {
+    QueryBuilder<Customer> queryBuilder = QueryBuilder<Customer>(Customer())
+      ..whereEqualTo(Customer.phoneNumberKey, phoneNumber);
 
     ParseResponse response = await queryBuilder.query();
 
-    return response.results as List<Order>;
+    return response.results == null ? null : response.results[0] as Customer;
+  }
+
+  // Fetch all orders associated with this customer
+  Future<List<Order>> getOrders() async {
+    QueryBuilder<Order> queryBuilder = QueryBuilder<Order>(Order())
+      ..whereMatchesQuery(Order.customerKey, QueryBuilder<Customer>(this));
+
+    return (await queryBuilder.query()).results.cast<Order>();
+  }
+
+  // Create a new customer with the given data
+  // returns true if customer was created successfully
+  static Future<bool> addCustomer(String phoneNumber, String name) async {
+    Customer newCustomer = Customer();
+    newCustomer.phoneNumber = phoneNumber;
+    newCustomer.name = name;
+
+    return (await newCustomer.save()).success;
   }
 }

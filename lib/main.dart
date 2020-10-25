@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Customer.dart';
 import 'package:flutter_clothes_app/Data/Order.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 
+import 'Data/Customer.dart';
+import 'Data/ParseConnection.dart';
 import 'Pages/SearchCustomer.dart';
 import 'Pages/OrdersHome.dart';
 
 void main() {
   runApp(MyApp());
 }
-
-const applicationId = "GHOhkmIucHJIhnhqSHVPMgJXpJmKDBCxt2Nn4Bvp";
-const parseServerUrl = "https://parseapi.back4app.com/";
-const clientKey = "9FRMiSnXcxB2MzJSuRt7jS3v75vrOImvh8WnkZIF";
-const masterKey = "7hvm5PaDdxdD0sBqaf2NJCk5q9UnZqu2Xuz018Ur";
 
 class MyApp extends StatelessWidget {
   @override
@@ -47,22 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
         // TODO: notify the user of the error
         .catchError((error) =>
             print('Could not connect to Parse.\n' + error.toString()));
-  }
-
-  // Establishes a DEBUG connection with Parse server
-  Future connectParse() {
-    return Parse().initialize(
-      applicationId,
-      parseServerUrl,
-      clientKey: clientKey,
-      masterKey: masterKey,
-      // Register our custom classes
-      registeredSubClassMap: <String, ParseObjectConstructor>{
-        Order.keyTableName: () => Order(),
-        Customer.keyTableName: () => Customer(),
-      },
-      debug: true,
-    );
   }
 
   void onConnection(value) {

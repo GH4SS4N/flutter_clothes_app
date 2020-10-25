@@ -4,12 +4,11 @@ import 'package:flutter_clothes_app/Data/Order.dart';
 import 'package:flutter_clothes_app/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/Widgets/OrderCard.dart';
 import 'package:flutter_clothes_app/Widgets/OrderDetails.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class CustomerOrders extends StatefulWidget {
   final Order order;
   final Customer customer;
-  final Function orderUpdated;
+  final Function orderUpdated; // run when the order is updated
 
   CustomerOrders(this.customer, {this.order, this.orderUpdated, Key key})
       : super(key: key);
@@ -19,41 +18,41 @@ class CustomerOrders extends StatefulWidget {
 }
 
 class _CustomerOrders extends State<CustomerOrders> {
-  Order order;
-  List<Order> customerOrders;
+  Order order; // current order
+  List<Order> customerOrders; // current customer
 
   _CustomerOrders({this.order});
 
-  // requests all orders made by this customer
+  // get all this customer's orders then updates
   void fetchCustomerOrders() {
-    Order.sortedOrdersBuilder()
-      ..whereContains(Order.customerKey, widget.customer.objectId,
-          caseSensitive: true)
-      ..whereMatchesQuery("customer", QueryBuilder(widget.customer))
-      ..query().then((value) =>
-          setState(() => customerOrders = value.results.cast<Order>()));
+    widget.customer
+        .getOrders()
+        .then((orders) => setState(() => customerOrders = orders))
+        // TODO: @GH4SS4N handle error on getting orders
+        .catchError((error) {});
   }
 
-  // returns a list of all this customer's orders
+  // returns a ListView of all this customer's orders
   Widget ordersList() {
     // if no orders were loaded
     if (customerOrders == null) {
-      // Get the orders
+      // load them
       fetchCustomerOrders();
-      // TODO: return something else instead of only text
+      // and display progress meanwhile
       return Center(child: Container(child: CircularProgressIndicator()));
     }
 
+    // otherwise
     // build a list of order cards
     return ListView.builder(
       scrollDirection: Axis.vertical,
       itemCount: customerOrders.length,
-      // for every order
+      // for every order in our customerOrders
       itemBuilder: (context, index) {
-        // make an order card
+        // create an order card
         return OrderCard(
           customerOrders[index],
-          // when the orderCard is tapped, show the order
+          // when this orderCard is tapped, show this order's details
           () => setState(() => order = customerOrders[index]),
         );
       },
@@ -91,7 +90,7 @@ class _CustomerOrders extends State<CustomerOrders> {
                           order,
                           widget.orderUpdated,
                         ))
-                      // else, show the list of all orders
+                      // otherwise, show a list of this customer's orders
                       : ordersList(),
             )
           ]),
