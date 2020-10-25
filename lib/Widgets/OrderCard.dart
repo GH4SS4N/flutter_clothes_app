@@ -22,7 +22,7 @@ class OrderCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            /*TODO: Implement conditional rendering of a customer's info
+            /*TODO: Implement conditional rendering of a customer's info(Saud:is it done?)
               based on whether or not customer is null */
             Padding(
               padding: const EdgeInsets.all(20.0),
