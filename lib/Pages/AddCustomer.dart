@@ -9,6 +9,7 @@ class AddCustomer extends StatefulWidget {
 class _AddCustomer extends State<AddCustomer> {
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build ( what do you mean) Ghassan
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -47,7 +48,7 @@ class _AddCustomer extends State<AddCustomer> {
               RaisedButton(
                 color: Colors.green,
                 onPressed: () {
-                  //TODO: HERE SHOULD BE THE PARSE CALL TO WRITE THE NEW CUTOMER
+                  //TODO: (Saud) HERE SHOULD BE THE PARSE CALL TO WRITE THE NEW CUTOMER
                 },
                 child: Row(
                   children: [

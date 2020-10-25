@@ -23,8 +23,7 @@ class _OrdersHome extends State<OrdersHome> {
   }
 
   void fetchOrders() {
-    // fetch all orders sorted
-    /*TODO: @SaudBako make this more performant by getting all orders first
+    /*TODO: make this more performant by getting all orders first(Saud)
       then querying customers based on an array of customer ids obtained from orders*/
     Order.getAllSorted().then((response) {
       setState(() {

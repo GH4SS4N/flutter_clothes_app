@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
 import 'AddCustomer.dart';
 
 // Add orders
@@ -16,16 +14,6 @@ class _AddOrder extends State<AddOrder> {
   final formKey = new GlobalKey<FormState>();
   File file;
   FilePickerResult result;
-  // User x =new User(1, 20, 'Ghassan');
-  Future<void> pdfgetFile() async {
-    result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (result != null) {
-      File file = File(result.files.single.path);
-    }
-  }
 
   Future<void> imagegetFile() async {
     result = await FilePicker.platform.pickFiles(
@@ -33,6 +21,7 @@ class _AddOrder extends State<AddOrder> {
       allowedExtensions: ['jpg'],
     );
     if (result != null) {
+      //TODO: use file to uploud it to parse (Saud)
       File file = File(result.files.single.path);
     }
   }
@@ -41,7 +30,7 @@ class _AddOrder extends State<AddOrder> {
     if (formKey.currentState.validate()) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddCustomer()));
-      //TODO: parse call to chick if the customer excest or not and assign the order
+      //TODO: parse call to chick if the customer excest or not and assign the order(Saud)
       print("successes");
     }
   }

@@ -38,7 +38,6 @@ class _CustomerOrders extends State<CustomerOrders> {
     if (customerOrders == null) {
       // load them
       fetchCustomerOrders();
-      // and display progress meanwhile
       return Center(child: Container(child: CircularProgressIndicator()));
     }
 
