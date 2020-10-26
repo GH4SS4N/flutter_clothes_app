@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:intl/intl.dart';
 
 // Overview information of an order representing an order record
 class OrderCard extends StatelessWidget {
@@ -25,17 +26,17 @@ class OrderCard extends StatelessWidget {
             /*TODO: Implement conditional rendering of a customer's info(Saud:is it done?)
               based on whether or not customer is null */
             Padding(
-              padding: const EdgeInsets.all(20.0),
-              child:
-                  //Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Text('Name: ' + customer.get("name")),
-                  //     Text('Number: ' + customer.get("phoneNumber"))
-                  //   ],
-                  // )
-                  Text('Order id: ' + order.objectId),
-            ),
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        'Created: ' + DateFormat.yMd().format(order.createdAt)),
+                    Text('Amount: ' + order.amount.toString())
+                  ],
+                )
+                // Text('Order id: ' + order.objectId),
+                ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(

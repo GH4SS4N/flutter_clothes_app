@@ -65,11 +65,12 @@ class _AddOrder extends State<AddOrder> {
           firstPayment.toString() +
           ' ' +
           phoneNumber.toString());
-      //excuted if there is no customer with this phone number
+      //if (there is no cutomer with that phonenumber ){
       createCustomerDialog(context).then((value) {
         cutomerName = value;
       });
-      // //TODO: parse call to chick if the customer excest or not and assign the order(Saud)
+      //
+      // //TODO: @SaudBako parse call to chick if the customer excest or not and assign the order
       // print("successes");
     }
   }

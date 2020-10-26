@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:intl/intl.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -77,7 +78,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 ),
                 OrderDetail(
                   "Date created ",
-                  widget.order.createdAt.toIso8601String(),
+                  DateFormat.yMd().format(widget.order.createdAt),
                 ),
                 // if the order is updating
                 // if the order is completed
@@ -90,8 +91,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           children: [
                             Padding(
                                 padding: EdgeInsets.all(30),
-                                child:
-                                    Text(widget.order.completedDate.toString()))
+                                child: Text(DateFormat.yMd()
+                                    .format(widget.order.createdAt)
+                                    .toString()))
                           ],
                         ),
                       )

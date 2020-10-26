@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ListTile(
                       onTap: () {
                         setState(() {
-                          current = SearchCustmer();
+                          current = SearchCustomer();
                         });
 
                         Navigator.pop(context);
