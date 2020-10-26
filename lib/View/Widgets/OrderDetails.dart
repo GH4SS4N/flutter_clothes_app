@@ -92,7 +92,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                             Padding(
                                 padding: EdgeInsets.all(30),
                                 child: Text(DateFormat.yMd()
-                                    .format(widget.order.createdAt)
+                                    .format(widget.order.completedDate)
                                     .toString()))
                           ],
                         ),
