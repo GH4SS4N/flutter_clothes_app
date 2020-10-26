@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clothes_app/Controller/AllOrdersController.dart';
 import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
 import 'package:flutter_clothes_app/View/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/View/Widgets/OrderCard.dart';
 import 'package:flutter_clothes_app/View/Widgets/OrderDetails.dart';
+import 'package:get/get.dart';
 
 class CustomerOrders extends StatefulWidget {
   final Order order;
@@ -20,7 +22,6 @@ class CustomerOrders extends StatefulWidget {
 class _CustomerOrders extends State<CustomerOrders> {
   Order order; // current order
   List<Order> customerOrders; // current customer
-
   _CustomerOrders({this.order});
 
   // get all this customer's orders then updates
@@ -86,9 +87,10 @@ class _CustomerOrders extends State<CustomerOrders> {
                       // Show the order
                       SingleChildScrollView(
                           child: OrderDetails(
-                          order,
-                          widget.orderUpdated,
-                        ))
+                            order,
+                            widget.orderUpdated,
+                          ),
+                        )
                       // otherwise, show a list of this customer's orders
                       : ordersList(),
             )
