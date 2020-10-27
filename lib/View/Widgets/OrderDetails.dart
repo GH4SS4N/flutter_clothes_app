@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:flutter_clothes_app/View/Pages/ImageVeiwer.dart';
 import 'package:intl/intl.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -54,12 +55,22 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Padding(
                   padding: EdgeInsets.all(4),
                   // Order image
-                  child: Container(
-                    // TODO: implement clicking on the image to expand it(Ghassan)
-                    child: buildImage(widget.order.image),
-                    height: 360,
-                    width: 380,
-                    color: Colors.grey,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ImageViewer(
+                                    image: widget.order.image.file,
+                                  )));
+                    },
+                    child: Container(
+                      // TODO: implement clicking on the image to expand it(Ghassan)
+                      child: buildImage(widget.order.image),
+                      height: 360,
+                      width: 380,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
                 Divider(color: Colors.black),
