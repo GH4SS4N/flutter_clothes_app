@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Controller/ParseController.dart';
-import 'package:get/get.dart';
 
 import 'Model/ParseConnection.dart';
 import 'View/Pages/SearchCustomer.dart';
@@ -14,7 +12,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return MaterialApp(
       title: 'Customers',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: MyHomePage(),
@@ -23,28 +21,33 @@ class MyApp extends StatelessWidget {
 }
 
 //main page
-class MyHomePage extends StatelessWidget {
-  ParseController parseController =
-      Get.put<ParseController>(ParseController(), permanent: true);
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
 
-  // @override
-  // void initState() {
-  //   super.initState();
+class _MyHomePageState extends State<MyHomePage> {
+  Widget current = OrdersHome();
+  bool connected = false;
 
-  //   // Establish connection to Parse
-  //   connectParse()
-  //       // run code after connection
-  //       .then(onConnection)
-  //       // TODO: notify the user of the error(Ghassan)
-  //       .catchError((error) =>
-  //           print('Could not connect to Parse.\n' + error.toString()));
-  // }
+  @override
+  void initState() {
+    super.initState();
 
-  // void onConnection(value) {
-  //   setState(() {
-  //     connected = true;
-  //   });
-  // }
+    // Establish connection to Parse
+    connectParse()
+        // run code after connection
+        .then(onConnection)
+        // TODO: notify the user of the error(Ghassan)
+        .catchError((error) =>
+            print('Could not connect to Parse.\n' + error.toString()));
+  }
+
+  void onConnection(value) {
+    setState(() {
+      connected = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,11 @@ class MyHomePage extends StatelessWidget {
                   children: [
                     ListTile(
                       onTap: () {
-                        Get.to(SearchCustomer());
+                        setState(() {
+                          current = SearchCustomer();
+                        });
+
+                        Navigator.pop(context);
                       },
                       focusColor: Colors.amber,
                       contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -74,7 +81,11 @@ class MyHomePage extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        Get.to(OrdersHome());
+                        setState(() {
+                          current = OrdersHome();
+                        });
+
+                        Navigator.pop(context);
                       },
                       focusColor: Colors.amber,
                       contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -117,9 +128,9 @@ class MyHomePage extends StatelessWidget {
               centerTitle: true,
               backgroundColor: Colors.black,
             ),
-            body: Obx(() => parseController.connected.value
-                ? OrdersHome()
-                : Center(child: CircularProgressIndicator()))),
+            body: connected
+                ? current
+                : Center(child: CircularProgressIndicator())),
       ),
     );
   }
