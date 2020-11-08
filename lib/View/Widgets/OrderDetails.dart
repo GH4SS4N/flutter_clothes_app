@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Data/Order.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:intl/intl.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -54,7 +55,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   padding: EdgeInsets.all(4),
                   // Order image
                   child: Container(
-                    // TODO: implement clicking on the image to expand it
+                    // TODO: implement clicking on the image to expand it(Ghassan)
                     child: buildImage(widget.order.image),
                     height: 360,
                     width: 380,
@@ -77,7 +78,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 ),
                 OrderDetail(
                   "Date created ",
-                  widget.order.createdAt.toIso8601String(),
+                  DateFormat.yMd().format(widget.order.createdAt),
                 ),
                 // if the order is updating
                 // if the order is completed
@@ -90,14 +91,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           children: [
                             Padding(
                                 padding: EdgeInsets.all(30),
-<<<<<<< HEAD:lib/Widgets/OrderDetails.dart
-                                child:
-                                    Text(widget.order.completedDate.toString()))
-=======
                                 child: Text(DateFormat.yMd()
-                                    .format(widget.order.createdAt)
+                                    .format(widget.order.completedDate)
                                     .toString()))
->>>>>>> parent of 67d11cd... submition date fixed widget:lib/View/Widgets/OrderDetails.dart
                           ],
                         ),
                       )
@@ -128,7 +124,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                           widget.order.completedDate = DateTime.now();
                           // save the new vlues on the server
                           widget.order.save().then((response) {
-                            // TODO: implement handling update error
+                            // TODO: implement handling update error(Saud:is it a widget??Ghassan is asking)
                             if (!response.success)
                               print('Could not update object');
 
