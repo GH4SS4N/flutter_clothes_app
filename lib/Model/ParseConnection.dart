@@ -3,7 +3,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'Customer.dart';
 import 'Order.dart';
 
-const debug = false;
+const debug = true;
 
 const applicationId = "GHOhkmIucHJIhnhqSHVPMgJXpJmKDBCxt2Nn4Bvp";
 const parseServerUrl = "https://parseapi.back4app.com/";

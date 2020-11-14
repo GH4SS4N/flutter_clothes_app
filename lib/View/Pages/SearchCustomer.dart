@@ -7,6 +7,8 @@ import 'package:flutter_clothes_app/Model/Order.dart';
 
 import 'package:flutter_clothes_app/View/Widgets/OrderDetails.dart';
 
+import 'CustomerOrders.dart';
+
 // Search for customers
 class SearchCustomer extends StatefulWidget {
   @override
@@ -20,13 +22,23 @@ class _SearchCustomer extends State<SearchCustomer> {
   searchCustomer() {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      Customer.lookup(phoneNumber);
-      /*if(customer does exect){
-        show customer page with searched number
-      } else {
-        show Alert Dialog( customer does not exect)
-        
-      }*/
+      print('validation done');
+      setState(() {
+        print('inside set state');
+        var response = Customer.lookup(phoneNumber) as Customer;
+        Customer x = response;
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CustomerOrders(x)));
+      });
+      print('out of set state');
+      //if (x != null) {
+      //  response.result
+
+      // show customer page with searched number
+      // } else {
+      //show Alert Dialog( customer does not exect)
+//0503459827
+      // }
     }
   }
 

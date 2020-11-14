@@ -39,4 +39,18 @@ class Order extends ParseObject {
   static const String customerKey = 'customer';
   Customer get customer => get<Customer>(customerKey);
   set customer(Customer customer) => set<Customer>(customerKey, customer);
+
+  static QueryBuilder<Order> queryBuilderSorted() {
+    return QueryBuilder<Order>(Order())
+      // include their customer objects
+      ..includeObject([Order.customerKey])
+      // order by finished status, from unfinished (0) to finished (1)
+      ..orderByAscending(Order.finishedKey)
+      // then order by the date created at from most recent to older
+      ..orderByDescending('createdAt');
+  }
+
+  static Future<ParseResponse> getAllSorted() async {
+    return queryBuilderSorted().query();
+  }
 }
