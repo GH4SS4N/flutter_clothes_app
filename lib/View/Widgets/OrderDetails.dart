@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:flutter_clothes_app/View/Pages/ImageVeiwer.dart';
 import 'package:intl/intl.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -16,29 +19,22 @@ class OrderDetails extends StatefulWidget {
 class _OrderDetailsState extends State<OrderDetails> {
   bool _loading = false;
 
-  Widget buildImage(ParseFile image) {
-    // if no image was found return an icon
-    if (image == null) return Icon(Icons.do_not_disturb);
+  File imageFile;
 
-    // otherwise build a future
-    return FutureBuilder<ParseFile>(
-      // download the image
-      future: image.download(),
-      // build the image
-      builder: (BuildContext context, AsyncSnapshot<ParseFileBase> snapshot) {
-        // if data was downloaded
-        return snapshot.hasData
-            ?
-            // show the image
-            Image.file((snapshot.data as ParseFile).file)
-            // otherwise show a circular progress indicator
-            : Center(
-                child: CircularProgressIndicator(),
-                heightFactor: 0.50,
-                widthFactor: 0.50,
-              );
-      },
-    );
+  void initState() {
+    super.initState();
+    downloadImage(widget.order.image)
+        .then((downloadedFile) => setState(() => imageFile = downloadedFile));
+  }
+
+  Future<File> downloadImage(ParseFile parseImage) {
+    // if no image was found
+    if (parseImage == null)
+      throw new Exception("No image associated with the order!");
+
+    return parseImage
+        .download()
+        .then((downloadedParseFile) => downloadedParseFile.file);
   }
 
   @override
@@ -54,12 +50,21 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Padding(
                   padding: EdgeInsets.all(4),
                   // Order image
-                  child: Container(
-                    // TODO: implement clicking on the image to expand it(Ghassan)
-                    child: buildImage(widget.order.image),
-                    height: 360,
-                    width: 380,
-                    color: Colors.grey,
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          image: imageFile,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      child: Image.file(imageFile),
+                      height: 360,
+                      width: 380,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
                 Divider(color: Colors.black),

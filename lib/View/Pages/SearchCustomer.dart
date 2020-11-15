@@ -25,11 +25,19 @@ class _SearchCustomer extends State<SearchCustomer> {
       print('validation done');
       setState(() {
         print('inside set state');
-        var response = Customer.lookup(phoneNumber) as Customer;
-        Customer x = response;
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CustomerOrders(x)));
+        Customer.lookup(phoneNumber).then((value) {
+          print(value);
+          if (value != null) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerOrders(value as Customer)));
+          } else {
+            errorDialog(context);
+          }
+        });
       });
+
       print('out of set state');
       //if (x != null) {
       //  response.result
@@ -40,6 +48,27 @@ class _SearchCustomer extends State<SearchCustomer> {
 //0503459827
       // }
     }
+  }
+
+  Future<String> errorDialog(BuildContext context) {
+    TextEditingController textController = new TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Wrong number'),
+            content: Text(
+                "the number you  have enterd does not exect please make sure the customer number is correct"),
+            actions: [
+              MaterialButton(
+                  elevation: 20,
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(textController.text.toString());
+                  })
+            ],
+          );
+        });
   }
 
   Widget build(BuildContext context) {

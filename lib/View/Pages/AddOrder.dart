@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_clothes_app/Model/Customer.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
 //import 'AddCustomer.dart';
 
 // Add orders
@@ -14,7 +17,7 @@ class _AddOrder extends State<AddOrder> {
   var phoneNumber;
   var firstPayment;
   var amount;
-  var cutomerName;
+  var customerName;
   bool customerDoesExect = false;
   final formKey = new GlobalKey<FormState>();
   File file;
@@ -57,18 +60,33 @@ class _AddOrder extends State<AddOrder> {
         });
   }
 
-  validatAndSave() {
+  validatAndSave() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      print(amount.toString() +
-          ' ' +
-          firstPayment.toString() +
-          ' ' +
-          phoneNumber.toString());
-      //if (there is no cutomer with that phonenumber ){
-      createCustomerDialog(context).then((value) {
-        cutomerName = value;
+      Customer.lookup(phoneNumber).then((value) {
+        if (value == null) {
+          createCustomerDialog(context).then((value) {
+            customerName = value;
+            Customer.addCustomer(phoneNumber, customerName);
+          });
+        }
+      }).whenComplete(() async {
+        //Order(); //TODO: @Saud please do me a favor and make an addOrder method like the one in the customer class so I can finish cleanly
+
+        // var newOrder = ParseObject('Orders')
+        //   ..set('Name', 'Ketogenic')
+        //   ..set('Fat', 65);
+        // await newOrder.save();
       });
+      //Customer.addCustomer(phoneNumber, name);
+//
+//       print(amount.toString() +
+//           ' ' +
+//           firstPayment.toString() +
+//           ' ' +
+//           phoneNumber.toString());
+      //if (there is no cutomer with that phonenumber ){
+
       //
       // //TODO: @SaudBako parse call to chick if the customer excest or not and assign the order
       // print("successes");
