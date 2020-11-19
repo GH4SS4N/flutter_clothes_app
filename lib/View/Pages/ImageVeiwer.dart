@@ -20,13 +20,16 @@ class ImageViewer extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: AspectRatio(
-          aspectRatio: 9 / 16,
+          aspectRatio: MediaQuery.of(context).size.width *
+              1 /
+              MediaQuery.of(context).size.height *
+              1,
           child: ClipRect(
             child: PhotoView(
               imageProvider: FileImage(image),
               minScale: PhotoViewComputedScale.contained * 1,
               maxScale: PhotoViewComputedScale.contained * 4,
-              enableRotation: true,
+              //enableRotation: true,
               loadFailedChild: Center(
                 child: CircularProgressIndicator(),
               ),

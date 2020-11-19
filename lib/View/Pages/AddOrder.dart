@@ -170,13 +170,13 @@ class _AddOrder extends State<AddOrder> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                     ],
-                    onSaved: (valu) {
+                    onSaved: (value) {
                       setState(() {
-                        firstPayment = valu;
+                        firstPayment = value;
                       });
                     },
-                    validator: (valu) {
-                      return valu.length == 0
+                    validator: (value) {
+                      return value.length == 0
                           ? "there has to be first payment"
                           : null;
                     },

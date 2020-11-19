@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -52,5 +54,17 @@ class Order extends ParseObject {
 
   static Future<ParseResponse> getAllSorted() async {
     return queryBuilderSorted().query();
+  }
+
+  // Create a new customer with the given data
+  // returns true if customer was created successfully
+  static Future<bool> addOrder(
+      double amount, File image, double firstPayment, Customer customer) async {
+    Order newOrder = Order();
+    newOrder.amount = amount;
+    newOrder.firstPayment = firstPayment;
+    newOrder.customer = customer;
+
+    return (await newOrder.save()).success;
   }
 }

@@ -17,20 +17,23 @@ class OrderDetails extends StatefulWidget {
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
-  bool _loading = false;
+  bool _loading = true;
 
   File imageFile;
 
   void initState() {
     super.initState();
-    downloadImage(widget.order.image)
-        .then((downloadedFile) => setState(() => imageFile = downloadedFile));
+    downloadImage(widget.order.image).then((downloadedFile) => setState(() {
+          imageFile = downloadedFile;
+          _loading = false;
+        }));
   }
 
   Future<File> downloadImage(ParseFile parseImage) {
     // if no image was found
-    if (parseImage == null)
+    if (parseImage == null) {
       throw new Exception("No image associated with the order!");
+    }
 
     return parseImage
         .download()
@@ -60,7 +63,13 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ),
                     ),
                     child: Container(
-                      child: Image.file(imageFile),
+                      child: _loading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                              heightFactor: 0.50,
+                              widthFactor: 0.50,
+                            )
+                          : Image.file(imageFile),
                       height: 360,
                       width: 380,
                       color: Colors.grey,
@@ -106,21 +115,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                     : InkWell(
                         child: Card(
                           color: Colors.red,
-                          child: _loading
-                              ? Center(
-                                  child: CircularProgressIndicator(),
-                                  heightFactor: 0.50,
-                                  widthFactor: 0.50,
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(30),
-                                      child: Text('Complete'),
-                                    )
-                                  ],
-                                ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(30),
+                                child: Text('Complete'),
+                              )
+                            ],
+                          ),
                         ),
                         // when tapped
                         onTap: () {
@@ -134,13 +137,13 @@ class _OrderDetailsState extends State<OrderDetails> {
                               print('Could not update object');
 
                             // stop loading
-                            if (this.mounted) setState(() => _loading = false);
+                            if (this.mounted) setState(() => _loading = true);
 
                             // notify parent
                             widget.orderUpdated();
                           });
                           // start loading
-                          setState(() => _loading = true);
+                          setState(() => _loading = false);
                         },
                       ),
               ],
