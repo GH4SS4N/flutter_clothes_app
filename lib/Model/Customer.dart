@@ -33,7 +33,7 @@ class Customer extends ParseObject {
   // Fetch all orders associated with this customer
   Future<List<Order>> getOrders() async {
     QueryBuilder<Order> queryBuilder = QueryBuilder<Order>(Order())
-      ..whereMatchesQuery(Order.customerKey, QueryBuilder<Customer>(this));
+      ..whereEqualTo(Order.customerKey, this.objectId);
 
     return (await queryBuilder.query()).results.cast<Order>();
   }
@@ -47,4 +47,8 @@ class Customer extends ParseObject {
 
     return (await newCustomer.save()).success;
   }
+}
+
+void main() {
+  Customer().get("1AdQfymGaF");
 }
