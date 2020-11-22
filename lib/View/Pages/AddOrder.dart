@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
-//import 'AddCustomer.dart';
 
 // Add orders
 class AddOrder extends StatefulWidget {

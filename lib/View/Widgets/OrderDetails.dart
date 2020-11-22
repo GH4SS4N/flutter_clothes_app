@@ -30,14 +30,11 @@ class _OrderDetailsState extends State<OrderDetails> {
   }
 
   Future<File> downloadImage(ParseFile parseImage) {
-    // if no image was found
-    if (parseImage == null) {
-      throw new Exception("No image associated with the order!");
-    }
-
-    return parseImage
-        .download()
-        .then((downloadedParseFile) => downloadedParseFile.file);
+    return parseImage == null
+        ? Future.value(null)
+        : parseImage
+            .download()
+            .then((downloadedParseFile) => downloadedParseFile.file);
   }
 
   @override
