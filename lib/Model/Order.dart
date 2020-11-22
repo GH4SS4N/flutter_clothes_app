@@ -12,35 +12,33 @@ class Order extends ParseObject {
   Order.clone() : this();
 
   static const String finishedKey = 'finished';
-  bool get finished => get<bool>(finishedKey);
-  set finished(bool finished) => set<bool>(finishedKey, finished);
+  bool get finished => get(finishedKey);
+  set finished(bool finished) => set(finishedKey, finished);
 
   static const String amountKey = 'amount';
-  double get amount => double.parse(get<dynamic>(amountKey).toString());
-  set amount(double amount) => set<double>(amountKey, amount);
+  double get amount => double.parse(get(amountKey).toString());
+  set amount(double amount) => set(amountKey, amount);
 
   static const String imageKey = 'image';
-  ParseFile get image => get<ParseFile>(imageKey);
-  set image(ParseFile image) => set<ParseFile>(imageKey, image);
+  ParseFile get image => get(imageKey);
+  set image(ParseFile image) => set(imageKey, image);
 
   static const String createdByKey = 'createdBy';
-  ParseUser get createdBy => get<ParseUser>(createdByKey);
-  set createdBy(ParseUser createdBy) => set<ParseUser>(createdByKey, createdBy);
+  ParseUser get createdBy => get(createdByKey);
+  set createdBy(ParseUser createdBy) => set(createdByKey, createdBy);
 
   static const String firstPaymentKey = 'firstPayment';
-  double get firstPayment =>
-      double.parse(get<dynamic>(firstPaymentKey).toString());
-  set firstPayment(double firstPayment) =>
-      set<double>(firstPaymentKey, firstPayment);
+  double get firstPayment => double.parse(get(firstPaymentKey).toString());
+  set firstPayment(double firstPayment) => set(firstPaymentKey, firstPayment);
 
   static const String completedDateKey = 'completedDate';
-  DateTime get completedDate => get<DateTime>(completedDateKey);
+  DateTime get completedDate => get(completedDateKey);
   set completedDate(DateTime completedDate) =>
       set<DateTime>(completedDateKey, completedDate);
 
   static const String customerKey = 'customer';
-  Customer get customer => get<Customer>(customerKey);
-  set customer(Customer customer) => set<Customer>(customerKey, customer);
+  Customer get customer => get(customerKey);
+  set customer(Customer customer) => set(customerKey, customer);
 
   static QueryBuilder<Order> queryBuilderSorted() {
     return QueryBuilder<Order>(Order())
@@ -64,6 +62,7 @@ class Order extends ParseObject {
     newOrder.amount = amount;
     newOrder.firstPayment = firstPayment;
     newOrder.customer = customer;
+    newOrder.image = ParseFile(image)..upload();
 
     return (await newOrder.save()).success;
   }

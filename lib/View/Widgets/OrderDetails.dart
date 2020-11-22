@@ -54,14 +54,16 @@ class _OrderDetailsState extends State<OrderDetails> {
                   padding: EdgeInsets.all(4),
                   // Order image
                   child: InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ImageViewer(
-                          image: imageFile,
-                        ),
-                      ),
-                    ),
+                    onTap: () => imageFile == null
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ImageViewer(
+                                image: imageFile,
+                              ),
+                            ),
+                          ),
                     child: Container(
                       child: _loading
                           ? Center(
@@ -69,7 +71,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                               heightFactor: 0.50,
                               widthFactor: 0.50,
                             )
-                          : Image.file(imageFile),
+                          : imageFile == null
+                              ? Icon(Icons.image_not_supported)
+                              : Image.file(imageFile),
                       height: 360,
                       width: 380,
                       color: Colors.grey,
