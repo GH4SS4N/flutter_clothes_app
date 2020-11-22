@@ -1,11 +1,6 @@
-//import 'dart:convert';
-//import 'dart:io';
-
-//import 'package:flutter/cupertino.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-//import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewer extends StatelessWidget {
