@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:get/get.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 //import 'AddCustomer.dart';
 
@@ -78,7 +79,7 @@ class _AddOrder extends State<AddOrder> {
           Order.addOrder(amount, image, firstPayment, value);
         }
       }).whenComplete(() {
-        print('the addition has been completed--------');
+        Navigator.pop(context);
       });
     }
   }
