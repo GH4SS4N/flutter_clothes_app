@@ -141,7 +141,7 @@ class _AddOrder extends State<AddOrder> {
                     ],
                     onSaved: (value) {
                       setState(() {
-                        amount = value as double;
+                        amount = double.parse(value);
                       });
                     },
                     validator: (value) {
@@ -162,7 +162,7 @@ class _AddOrder extends State<AddOrder> {
                     ],
                     onSaved: (value) {
                       setState(() {
-                        firstPayment = value as double;
+                        firstPayment = double.parse(value);
                       });
                     },
                     validator: (value) {
