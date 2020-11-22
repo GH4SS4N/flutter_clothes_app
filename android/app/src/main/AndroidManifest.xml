@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_clothes_app">
-  <!-- things I have added to the project -->
+  <!-- things I have added to the project .. Ghassan -->
     <uses-permission android:name="android.permission.INTERNET" />
     
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that

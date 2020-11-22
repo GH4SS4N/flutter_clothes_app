@@ -15,12 +15,12 @@ class AddOrder extends StatefulWidget {
 
 class _AddOrder extends State<AddOrder> {
   var phoneNumber;
-  var firstPayment;
-  var amount;
+  double firstPayment;
+  double amount;
   var customerName;
   bool customerDoesExect = false;
   final formKey = new GlobalKey<FormState>();
-  File file;
+  File image;
   FilePickerResult result;
 
   Future<void> imagegetFile() async {
@@ -30,7 +30,7 @@ class _AddOrder extends State<AddOrder> {
     );
     if (result != null) {
       //TODO: use file to uploud it to parse (Saud)
-      file = File(result.files.single.path);
+      image = File(result.files.single.path);
     }
   }
 
@@ -65,31 +65,21 @@ class _AddOrder extends State<AddOrder> {
       formKey.currentState.save();
       Customer.lookup(phoneNumber).then((value) {
         if (value == null) {
+          print('customer does not exicet lets add hem');
           createCustomerDialog(context).then((value) {
             customerName = value;
-            Customer.addCustomer(phoneNumber, customerName);
+            Customer.addCustomer(phoneNumber, customerName).then((value) {
+              print('calling the method agian');
+              validatAndSave();
+            });
           });
+        } else {
+          print('order addition');
+          Order.addOrder(amount, image, firstPayment, value);
         }
-      }).whenComplete(() async {
-        //Order(); //TODO: @Saud please do me a favor and make an addOrder method like the one in the customer class so I can finish cleanly
-
-        // var newOrder = ParseObject('Orders')
-        //   ..set('Name', 'Ketogenic')
-        //   ..set('Fat', 65);
-        // await newOrder.save();
+      }).whenComplete(() {
+        print('the addition has been completed--------');
       });
-      //Customer.addCustomer(phoneNumber, name);
-//
-//       print(amount.toString() +
-//           ' ' +
-//           firstPayment.toString() +
-//           ' ' +
-//           phoneNumber.toString());
-      //if (there is no cutomer with that phonenumber ){
-
-      //
-      // //TODO: @SaudBako parse call to chick if the customer excest or not and assign the order
-      // print("successes");
     }
   }
 
@@ -151,7 +141,7 @@ class _AddOrder extends State<AddOrder> {
                     ],
                     onSaved: (value) {
                       setState(() {
-                        amount = value;
+                        amount = value as double;
                       });
                     },
                     validator: (value) {
@@ -172,7 +162,7 @@ class _AddOrder extends State<AddOrder> {
                     ],
                     onSaved: (value) {
                       setState(() {
-                        firstPayment = value;
+                        firstPayment = value as double;
                       });
                     },
                     validator: (value) {
