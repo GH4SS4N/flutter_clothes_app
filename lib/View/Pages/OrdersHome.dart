@@ -15,11 +15,19 @@ class OrdersHome extends StatefulWidget {
 class _OrdersHome extends State<OrdersHome> {
   List<Order> orders = List<Order>();
   bool loading = true;
+  GlobalKey<RefreshIndicatorState> refreshKey;
 
   @override
   void initState() {
     super.initState();
+    refreshKey = GlobalKey<RefreshIndicatorState>();
     fetchOrders();
+  }
+
+  Future<Null> refreshList() async {
+    await Future.delayed(Duration(seconds: 1));
+    fetchOrders();
+    return null;
   }
 
   void fetchOrders() {
@@ -43,28 +51,37 @@ class _OrdersHome extends State<OrdersHome> {
           color: Colors.deepOrangeAccent,
           child: loading
               ? Center(child: Container(child: CircularProgressIndicator()))
-              : ListView.builder(
-                  itemBuilder: (context, index) {
-                    Order order = orders[index];
-                    Customer customer = order.customer;
-                    return OrderCard(
-                      order,
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CustomerOrders(
-                              customer,
-                              order: order,
-                              orderUpdated: () => setState(() {}),
-                            ),
-                          ),
+              : RefreshIndicator(
+                  key: refreshKey,
+                  onRefresh: () async {
+                    await refreshList();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        Order order = orders[index];
+                        Customer customer = order.customer;
+                        return OrderCard(
+                          order,
+                          () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CustomerOrders(
+                                  customer,
+                                  order: order,
+                                  orderUpdated: () => setState(() {}),
+                                ),
+                              ),
+                            );
+                          },
+                          customer: customer,
                         );
                       },
-                      customer: customer,
-                    );
-                  },
-                  itemCount: orders.length,
+                      itemCount: orders.length,
+                    ),
+                  ),
                 ),
         ),
         Column(
@@ -76,6 +93,7 @@ class _OrdersHome extends State<OrdersHome> {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: FloatingActionButton(
+                    backgroundColor: Colors.indigo,
                     child: Icon(Icons.add),
                     onPressed: () {
                       Navigator.push(

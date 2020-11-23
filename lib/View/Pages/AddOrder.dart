@@ -20,6 +20,8 @@ class _AddOrder extends State<AddOrder> {
   final formKey = new GlobalKey<FormState>();
   File image;
   FilePickerResult result;
+  bool isThereAnImage = true;
+  bool isTheRestMoreThanAmount = true;
 
   Future<void> imagegetFile() async {
     result = await FilePicker.platform.pickFiles(
@@ -59,25 +61,50 @@ class _AddOrder extends State<AddOrder> {
   }
 
   validatAndSave() async {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      Customer.lookup(phoneNumber).then((value) {
-        if (value == null) {
-          print('customer does not exicet lets add hem');
-          createCustomerDialog(context).then((value) {
-            customerName = value;
-            Customer.addCustomer(phoneNumber, customerName).then((value) {
-              print('calling the method agian');
-              validatAndSave();
-            });
-          });
-        } else {
-          print('order addition');
-          Order.addOrder(amount, image, firstPayment, value);
-        }
-      }).whenComplete(() {
-        Navigator.pop(context);
+    bool imageIsStateIsFine = false;
+    bool textIsFine = false;
+    print('validation---------');
+    // formKey.currentState.validate();
+    // if (amount > firstPayment) {
+    //   setState(() {
+    //     isTheRestMoreThanAmount = false;
+    //   });
+    // }
+    if (image != null) {
+      setState(() {
+        imageIsStateIsFine = true;
       });
+    } else {
+      setState(() {
+        isThereAnImage = false;
+      });
+
+      if (formKey.currentState.validate()) {
+        setState(() {
+          textIsFine = true;
+        });
+      }
+
+      if (imageIsStateIsFine && textIsFine) {
+        formKey.currentState.save();
+        Customer.lookup(phoneNumber).then((value) {
+          if (value == null) {
+            print('customer does not exicet lets add hem');
+            createCustomerDialog(context).then((value) {
+              customerName = value;
+              Customer.addCustomer(phoneNumber, customerName).then((value) {
+                print('calling the method agian');
+                validatAndSave();
+              });
+            });
+          } else {
+            print('order addition');
+            Order.addOrder(amount, image, firstPayment, value);
+          }
+        }).whenComplete(() {
+          Navigator.pop(context);
+        });
+      }
     }
   }
 
@@ -166,6 +193,8 @@ class _AddOrder extends State<AddOrder> {
                     validator: (value) {
                       return value.length == 0
                           ? "there has to be first payment"
+                          // : isTheRestMoreThanAmount
+                          //     ? "first payment should be less than the total"
                           : null;
                     },
                   ),
@@ -173,14 +202,30 @@ class _AddOrder extends State<AddOrder> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                        icon: Icon(
-                          Icons.filter,
-                          size: 50,
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.filter,
+                                size: 50,
+                                color:
+                                    isThereAnImage ? Colors.black : Colors.red,
+                              ),
+                              onPressed: () {
+                                imagegetFile();
+                              }),
                         ),
-                        onPressed: () {
-                          imagegetFile();
-                        }),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            isThereAnImage ? "" : "*choose an image",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
                 Row(

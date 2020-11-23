@@ -77,7 +77,7 @@ class _CustomerOrders extends State<CustomerOrders> {
                   order = null;
                 });
               },
-              child: CustomerCard(widget.customer),
+              child: CustomerCard(widget.customer, order),
             ),
             Expanded(
               child:
