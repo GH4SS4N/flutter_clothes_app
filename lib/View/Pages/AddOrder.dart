@@ -78,33 +78,33 @@ class _AddOrder extends State<AddOrder> {
       setState(() {
         isThereAnImage = false;
       });
+    }
 
-      if (formKey.currentState.validate()) {
-        setState(() {
-          textIsFine = true;
-        });
-      }
+    if (formKey.currentState.validate()) {
+      setState(() {
+        textIsFine = true;
+      });
+    }
 
-      if (imageIsStateIsFine && textIsFine) {
-        formKey.currentState.save();
-        Customer.lookup(phoneNumber).then((value) {
-          if (value == null) {
-            print('customer does not exicet lets add hem');
-            createCustomerDialog(context).then((value) {
-              customerName = value;
-              Customer.addCustomer(phoneNumber, customerName).then((value) {
-                print('calling the method agian');
-                validatAndSave();
-              });
+    if (imageIsStateIsFine && textIsFine) {
+      formKey.currentState.save();
+      Customer.lookup(phoneNumber).then((value) {
+        if (value == null) {
+          print('customer does not exicet lets add hem');
+          createCustomerDialog(context).then((value) {
+            customerName = value;
+            Customer.addCustomer(phoneNumber, customerName).then((value) {
+              print('calling the method agian');
+              validatAndSave();
             });
-          } else {
-            print('order addition');
-            Order.addOrder(amount, image, firstPayment, value);
-          }
-        }).whenComplete(() {
-          Navigator.pop(context);
-        });
-      }
+          });
+        } else {
+          print('order addition');
+          Order.addOrder(amount, image, firstPayment, value);
+        }
+      }).whenComplete(() {
+        Navigator.pop(context);
+      });
     }
   }
 
