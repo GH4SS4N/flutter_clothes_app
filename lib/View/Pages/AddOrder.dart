@@ -65,18 +65,15 @@ class _AddOrder extends State<AddOrder> {
     //  bool imageIsStateIsFine = false;
     bool textIsFine = false;
     print('validation---------');
-    formKey.currentState.save();
-    formKey.currentState.validate();
 
-    if (firstPayment > amount) {
-      isTheRestMoreThanAmount = true;
-    } else {
-      isTheRestMoreThanAmount = false;
-    }
     if (image != null) {
-      isThereAnImage = true;
+      setState(() {
+        isThereAnImage = true;
+      });
     } else {
-      isThereAnImage = false;
+      setState(() {
+        isThereAnImage = false;
+      });
     }
 
     if (formKey.currentState.validate()) {
@@ -86,24 +83,33 @@ class _AddOrder extends State<AddOrder> {
     print(image.toString());
     print('is the text fine?' + textIsFine.toString());
     if (isThereAnImage && textIsFine) {
-      formKey.currentState.save();
-      Customer.lookup(phoneNumber).then((value) {
-        if (value == null) {
-          print('customer does not exicet lets add hem');
-          createCustomerDialog(context).then((value) {
-            print('inside the dialog');
-            customerName = value;
-            Customer.addCustomer(phoneNumber, customerName).whenComplete(() {
-              print('calling the method agian');
-              validatAndSave();
+      //formKey.currentState.save();
+      if (formKey.currentState.validate()) {
+        formKey.currentState.save();
+
+        // if (firstPayment > amount) {
+        //   isTheRestMoreThanAmount = true;
+        // } else {
+        //   isTheRestMoreThanAmount = false;
+        // }
+        Customer.lookup(phoneNumber).then((value) {
+          if (value == null && isTheRestMoreThanAmount == false) {
+            print('customer does not exicet lets add hem');
+            createCustomerDialog(context).then((value) {
+              print('inside the dialog');
+              customerName = value;
+              Customer.addCustomer(phoneNumber, customerName).whenComplete(() {
+                print('calling the method agian');
+                validatAndSave();
+              });
             });
-          });
-        } else {
-          print('order addition');
-          Order.addOrder(amount, image, firstPayment, value)
-              .whenComplete(() => Navigator.pop(context));
-        }
-      });
+          } else {
+            print('order addition');
+            Order.addOrder(amount, image, firstPayment, value)
+                .whenComplete(() => Navigator.pop(context));
+          }
+        });
+      }
     }
   }
 
@@ -168,6 +174,9 @@ class _AddOrder extends State<AddOrder> {
                         amount = double.parse(value);
                       });
                     },
+                    onChanged: (value) {
+                      amount = double.parse(value);
+                    },
                     validator: (value) {
                       return value.length == 0 ? "fill in the price " : null;
                     },
@@ -192,7 +201,7 @@ class _AddOrder extends State<AddOrder> {
                     validator: (value) {
                       return value.length == 0
                           ? "there has to be first payment"
-                          : isTheRestMoreThanAmount
+                          : double.parse(value) > amount
                               ? "first payment should be less than the total"
                               : null;
                     },
