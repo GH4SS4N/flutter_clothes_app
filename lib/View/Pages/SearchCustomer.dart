@@ -7,6 +7,8 @@ import 'package:flutter_clothes_app/Model/Order.dart';
 
 import 'package:flutter_clothes_app/View/Widgets/OrderDetails.dart';
 
+import 'CustomerOrders.dart';
+
 // Search for customers
 class SearchCustomer extends StatefulWidget {
   @override
@@ -20,14 +22,53 @@ class _SearchCustomer extends State<SearchCustomer> {
   searchCustomer() {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      Customer.lookup(phoneNumber);
-      /*if(customer does exect){
-        show customer page with searched number
-      } else {
-        show Alert Dialog( customer does not exect)
-        
-      }*/
+      print('validation done');
+      setState(() {
+        print('inside set state');
+        Customer.lookup(phoneNumber).then((value) {
+          print(value);
+          if (value != null) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerOrders(value as Customer)));
+          } else {
+            errorDialog(context);
+          }
+        });
+      });
+
+      print('out of set state');
+      //if (x != null) {
+      //  response.result
+
+      // show customer page with searched number
+      // } else {
+      //show Alert Dialog( customer does not exect)
+//0503459827
+      // }
     }
+  }
+
+  Future<String> errorDialog(BuildContext context) {
+    TextEditingController textController = new TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Wrong number'),
+            content: Text(
+                "the number you  have enterd does not exect please make sure the customer number is correct"),
+            actions: [
+              MaterialButton(
+                  elevation: 20,
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(textController.text.toString());
+                  })
+            ],
+          );
+        });
   }
 
   Widget build(BuildContext context) {

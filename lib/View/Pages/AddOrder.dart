@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'AddCustomer.dart';
+import 'package:flutter_clothes_app/Model/Customer.dart';
+import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:get/get.dart';
 
 // Add orders
 class AddOrder extends StatefulWidget {
@@ -12,13 +14,15 @@ class AddOrder extends StatefulWidget {
 
 class _AddOrder extends State<AddOrder> {
   var phoneNumber;
-  var firstPayment;
-  var amount;
-  var cutomerName;
+  double firstPayment;
+  double amount;
+  var customerName;
   bool customerDoesExect = false;
   final formKey = new GlobalKey<FormState>();
-  File file;
+  File image;
   FilePickerResult result;
+  bool isThereAnImage = true;
+  bool isTheRestMoreThanAmount = false;
 
   Future<void> imagegetFile() async {
     result = await FilePicker.platform.pickFiles(
@@ -27,7 +31,7 @@ class _AddOrder extends State<AddOrder> {
     );
     if (result != null) {
       //TODO: use file to uploud it to parse (Saud)
-      file = File(result.files.single.path);
+      image = File(result.files.single.path);
     }
   }
 
@@ -57,21 +61,49 @@ class _AddOrder extends State<AddOrder> {
         });
   }
 
-  validatAndSave() {
+  validatAndSave() async {
+    //  bool imageIsStateIsFine = false;
+    bool textIsFine = false;
+    print('validation---------');
+    formKey.currentState.save();
+    formKey.currentState.validate();
+
+    if (firstPayment > amount) {
+      isTheRestMoreThanAmount = true;
+    } else {
+      isTheRestMoreThanAmount = false;
+    }
+    if (image != null) {
+      isThereAnImage = true;
+    } else {
+      isThereAnImage = false;
+    }
+
     if (formKey.currentState.validate()) {
+      textIsFine = true;
+    }
+    print('is there an image ? ' + isThereAnImage.toString());
+    print(image.toString());
+    print('is the text fine?' + textIsFine.toString());
+    if (isThereAnImage && textIsFine) {
       formKey.currentState.save();
-      print(amount.toString() +
-          ' ' +
-          firstPayment.toString() +
-          ' ' +
-          phoneNumber.toString());
-      //if (there is no cutomer with that phonenumber ){
-      createCustomerDialog(context).then((value) {
-        cutomerName = value;
+      Customer.lookup(phoneNumber).then((value) {
+        if (value == null) {
+          print('customer does not exicet lets add hem');
+          createCustomerDialog(context).then((value) {
+            print('inside the dialog');
+            customerName = value;
+            Customer.addCustomer(phoneNumber, customerName).whenComplete(() {
+              print('calling the method agian');
+              validatAndSave();
+            });
+          });
+        } else {
+          print('order addition');
+          Order.addOrder(amount, image, firstPayment, value)
+              .whenComplete(() => Navigator.pop(context));
+        }
       });
-      //
-      // //TODO: @SaudBako parse call to chick if the customer excest or not and assign the order
-      // print("successes");
     }
   }
 
@@ -133,7 +165,7 @@ class _AddOrder extends State<AddOrder> {
                     ],
                     onSaved: (value) {
                       setState(() {
-                        amount = value;
+                        amount = double.parse(value);
                       });
                     },
                     validator: (value) {
@@ -152,29 +184,47 @@ class _AddOrder extends State<AddOrder> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
                     ],
-                    onSaved: (valu) {
+                    onSaved: (value) {
                       setState(() {
-                        firstPayment = valu;
+                        firstPayment = double.parse(value);
                       });
                     },
-                    validator: (valu) {
-                      return valu.length == 0
+                    validator: (value) {
+                      return value.length == 0
                           ? "there has to be first payment"
-                          : null;
+                          : isTheRestMoreThanAmount
+                              ? "first payment should be less than the total"
+                              : null;
                     },
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                        icon: Icon(
-                          Icons.filter,
-                          size: 50,
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: IconButton(
+                              icon: Icon(
+                                Icons.filter,
+                                size: 50,
+                                color:
+                                    isThereAnImage ? Colors.black : Colors.red,
+                              ),
+                              onPressed: () {
+                                imagegetFile();
+                              }),
                         ),
-                        onPressed: () {
-                          imagegetFile();
-                        }),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            isThereAnImage ? "" : "*choose an image",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
                 Row(

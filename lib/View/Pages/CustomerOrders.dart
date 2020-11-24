@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clothes_app/Controller/AllOrdersController.dart';
 import 'package:flutter_clothes_app/Model/Customer.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
 import 'package:flutter_clothes_app/View/Widgets/CustomerCard.dart';
 import 'package:flutter_clothes_app/View/Widgets/OrderCard.dart';
 import 'package:flutter_clothes_app/View/Widgets/OrderDetails.dart';
-import 'package:get/get.dart';
 
 class CustomerOrders extends StatefulWidget {
   final Order order;
@@ -16,13 +14,15 @@ class CustomerOrders extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CustomerOrders createState() => _CustomerOrders(order: order);
+  _CustomerOrders createState() => _CustomerOrders(customer, order: order);
 }
 
 class _CustomerOrders extends State<CustomerOrders> {
+  Customer customer;
   Order order; // current order
   List<Order> customerOrders; // current customer
-  _CustomerOrders({this.order});
+
+  _CustomerOrders(this.customer, {this.order});
 
   // get all this customer's orders then updates
   void fetchCustomerOrders() {
@@ -77,7 +77,7 @@ class _CustomerOrders extends State<CustomerOrders> {
                   order = null;
                 });
               },
-              child: CustomerCard(widget.customer),
+              child: CustomerCard(widget.customer, order),
             ),
             Expanded(
               child:
@@ -87,10 +87,9 @@ class _CustomerOrders extends State<CustomerOrders> {
                       // Show the order
                       SingleChildScrollView(
                           child: OrderDetails(
-                            order,
-                            widget.orderUpdated,
-                          ),
-                        )
+                          order,
+                          widget.orderUpdated,
+                        ))
                       // otherwise, show a list of this customer's orders
                       : ordersList(),
             )

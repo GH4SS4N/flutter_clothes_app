@@ -32,10 +32,12 @@ class Customer extends ParseObject {
 
   // Fetch all orders associated with this customer
   Future<List<Order>> getOrders() async {
-    QueryBuilder<Order> queryBuilder = QueryBuilder<Order>(Order())
-      ..whereMatchesQuery(Order.customerKey, QueryBuilder<Customer>(this));
+    QueryBuilder<Order> queryBuilder = Order.queryBuilderSorted()
+      ..whereEqualTo(Order.customerKey, this);
 
-    return (await queryBuilder.query()).results.cast<Order>();
+    ParseResponse response = await queryBuilder.query();
+
+    return response.results.cast<Order>();
   }
 
   // Create a new customer with the given data

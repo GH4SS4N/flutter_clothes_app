@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_clothes_app/Model/Order.dart';
+import 'package:flutter_clothes_app/View/Pages/ImageVeiwer.dart';
 import 'package:intl/intl.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -14,31 +17,24 @@ class OrderDetails extends StatefulWidget {
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
-  bool _loading = false;
+  bool _loading = true;
 
-  Widget buildImage(ParseFile image) {
-    // if no image was found return an icon
-    if (image == null) return Icon(Icons.do_not_disturb);
+  File imageFile;
 
-    // otherwise build a future
-    return FutureBuilder<ParseFile>(
-      // download the image
-      future: image.download(),
-      // build the image
-      builder: (BuildContext context, AsyncSnapshot<ParseFileBase> snapshot) {
-        // if data was downloaded
-        return snapshot.hasData
-            ?
-            // show the image
-            Image.file((snapshot.data as ParseFile).file)
-            // otherwise show a circular progress indicator
-            : Center(
-                child: CircularProgressIndicator(),
-                heightFactor: 0.50,
-                widthFactor: 0.50,
-              );
-      },
-    );
+  void initState() {
+    super.initState();
+    downloadImage(widget.order.image).then((downloadedFile) => setState(() {
+          imageFile = downloadedFile;
+          _loading = false;
+        }));
+  }
+
+  Future<File> downloadImage(ParseFile parseImage) {
+    return parseImage == null
+        ? Future.value(null)
+        : parseImage
+            .download()
+            .then((downloadedParseFile) => downloadedParseFile.file);
   }
 
   @override
@@ -54,12 +50,31 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Padding(
                   padding: EdgeInsets.all(4),
                   // Order image
-                  child: Container(
-                    // TODO: implement clicking on the image to expand it(Ghassan)
-                    child: buildImage(widget.order.image),
-                    height: 360,
-                    width: 380,
-                    color: Colors.grey,
+                  child: InkWell(
+                    onTap: () => imageFile == null
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ImageViewer(
+                                image: imageFile,
+                              ),
+                            ),
+                          ),
+                    child: Container(
+                      child: _loading
+                          ? Center(
+                              child: CircularProgressIndicator(),
+                              heightFactor: 0.50,
+                              widthFactor: 0.50,
+                            )
+                          : imageFile == null
+                              ? Icon(Icons.image_not_supported)
+                              : Image.file(imageFile),
+                      height: 360,
+                      width: 380,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
                 Divider(color: Colors.black),
@@ -101,21 +116,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                     : InkWell(
                         child: Card(
                           color: Colors.red,
-                          child: _loading
-                              ? Center(
-                                  child: CircularProgressIndicator(),
-                                  heightFactor: 0.50,
-                                  widthFactor: 0.50,
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(30),
-                                      child: Text('Complete'),
-                                    )
-                                  ],
-                                ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(30),
+                                child: Text('Complete'),
+                              )
+                            ],
+                          ),
                         ),
                         // when tapped
                         onTap: () {
@@ -129,13 +138,13 @@ class _OrderDetailsState extends State<OrderDetails> {
                               print('Could not update object');
 
                             // stop loading
-                            if (this.mounted) setState(() => _loading = false);
+                            if (this.mounted) setState(() => _loading = true);
 
                             // notify parent
                             widget.orderUpdated();
                           });
                           // start loading
-                          setState(() => _loading = true);
+                          setState(() => _loading = false);
                         },
                       ),
               ],
